@@ -3,176 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Reproductor con Letras</title>
-
+    <title>Reproductor de Música Pro</title>
+    <!-- Google Fonts y Phosphor Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
+        :root {
+            /* Paleta de colores juvenil y minimalista */
+            --background: #1A1D24; /* Azul pizarra profundo */
+            --surface: #242831; /* Superficie ligeramente más clara */
+            --primary-text: #F0F0F0; /* Blanco suave */
+            --secondary-text: #8A91A0; /* Gris apagado para texto secundario */
+            --accent-color: #00DFB8; /* Menta vibrante */
+            --border-color: #3A3F4B;
+            --font-main: 'Inter', sans-serif;
+            --chord-color: #A485FF; /* Violeta energético para acordes */
+        }
+
+        html {
+            font-size: 100%; 
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /*height: 100vh;*/
+            font-family: var(--font-main);
+            background-color: var(--background);
+            color: var(--primary-text);
             margin: 0;
-            padding: 0;
-			font-size:14px;
+            font-size: 0.875rem; /* 14px */
+            overflow: hidden; /* Evitar scroll en el body */
         }
+
+        /* --- Pantalla de Selección de Modo --- */
+        #mode-selection-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--background);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 200; flex-direction: column; padding: 1.25rem;
+            box-sizing: border-box; transition: opacity 0.3s ease-in-out;
+        }
+        .selection-box {
+            text-align: center; background-color: var(--surface);
+            padding: 2rem; border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.4);
+        }
+        .selection-box h2 { margin-top: 0; color: var(--primary-text); }
+        .selection-box p { color: var(--secondary-text); margin-bottom: 1.5rem; }
+        .selection-buttons { display: flex; flex-direction: column; gap: 1rem; }
+        .selection-buttons button {
+            padding: 0.9375rem 1.5rem; font-size: 1rem; font-weight: 600;
+            border: none; border-radius: 0.5rem; cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .selection-buttons button:hover { transform: scale(1.05); }
+        #with-guitar-btn { background-color: var(--accent-color); color: #000; }
+        #without-guitar-btn {
+            background-color: transparent; color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        /* --- Estructura del Reproductor --- */
         .player-container {
-            background-color: #1e1e1e;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-            width: 90%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
+            width: 100vw; height: 100vh; display: flex;
+            flex-direction: column; overflow: hidden;
+            transition: opacity 0.3s ease-in-out;
         }
-        h3 {
-            color: #ffffff;
-            text-align: left;
-            margin-top: 0;
-		margin-bottom:10px;
-        }
-        #now-playing {
-            text-align: center;
-            color: #b3b3b3;
-            font-style: italic;
-            margin-bottom: 10px;
-            min-height: 20px;
-		margin-top: 10px;
-        }
-        audio {
+        .hidden { opacity: 0; pointer-events: none; }
+        .main-view { position: relative; flex-grow: 1; display: flex; overflow: hidden; }
+
+        /* --- Contenedor de Letras (Principal en Móvil) --- */
+        .lyrics-container {
+            padding: 1.25rem; box-sizing: border-box; overflow-y: auto;
+            flex-grow: 1; background-color: var(--surface);
             width: 100%;
-            margin-bottom: 10px;
         }
-        #playlist {
-            list-style: none;
-            padding: 0;
-            max-height: 230px; /* Altura ajustada para dar espacio a la letra */
-            overflow-y: auto;
-            border: 1px solid #282828;
-            border-radius: 5px;
-		margin:1px;
-        }
-        #playlist li {
-            padding: 12px 15px;
-            border-bottom: 1px solid #282828;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-        #playlist li:last-child {
-            border-bottom: none;
-        }
-        #playlist li:hover {
-            background-color: #2a2a2a;
-        }
-        #playlist li.active {
-            background-color: #535353;
-            color: #1db954;
-            font-weight: bold;
-        }
-        
-        /* --- NUEVOS ESTILOS PARA LA SECCIÓN DE LETRA --- */
-        #lyrics-section {
-            margin-top: 10px;
-        }
-        #lyrics-section h3 {
-            color: #b3b3b3;
-                margin-top: 0;
-		margin-bottom:10px;
+        .lyrics-container h3 {
+            margin-top: 0; color: var(--secondary-text);
+            border-bottom: 0.0625rem solid var(--border-color);
+            padding-bottom: 0.625rem;
         }
         #lyrics-display {
-            background-color: #101010;
-            padding: 15px;
-            border-radius: 5px;
-            max-height: 800px;/*250px*/
+            white-space: pre-wrap; line-height: 1.6em; color: var(--primary-text);
+            font-size: 1.1em; background-color: transparent; padding: 1rem 0;
+        }
+        #lyrics-display b { color: var(--accent-color); }
+        #lyrics-display .chord { color: var(--chord-color); font-weight: 600; }
+        
+        /* --- Panel de Playlist (Menú lateral en móvil) --- */
+        .playlist-container {
+            position: absolute; top: 0; left: 0; bottom: 0;
+            width: 80%; max-width: 300px;
+            background-color: var(--surface);
+            border-right: 0.0625rem solid var(--border-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 150; padding: 1.25rem; box-sizing: border-box;
             overflow-y: auto;
-            white-space: pre-wrap; /* Respeta los saltos de línea y espacios */
-            line-height: 1.6;
-            color: #ccc;
+        }
+        .playlist-container.is-open { transform: translateX(0); }
+        #playlist { list-style: none; padding: 0; margin: 0; }
+        #playlist li {
+            padding: 0.9375rem; border-radius: 0.5rem; margin-bottom: 0.5rem;
+            cursor: pointer; transition: background-color 0.2s, color 0.2s;
+            border-bottom: 0.0625rem solid var(--border-color);
+        }
+        #playlist li:hover { background-color: rgba(255, 255, 255, 0.05); }
+        #playlist li.active { background-color: var(--accent-color); color: #000; font-weight: bold; }
+
+        /* Overlay para cerrar el menú */
+        .overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5); z-index: 140;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .overlay.is-open { opacity: 1; visibility: visible; }
+        
+        /* Header con botón de menú */
+        .app-header {
+            padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center;
+        }
+        #playlist-toggle-btn {
+            background: none; border: none; color: var(--primary-text);
+            padding: 0.5rem; margin-right: 1rem; cursor: pointer;
+        }
+
+        /* --- Barra de Reproductor Fija --- */
+        .player-controls {
+            position: relative; /* Cambiado de fixed para que se quede dentro del .player-container */
+            background-color: rgba(26, 29, 36, 0.8); backdrop-filter: blur(0.625rem);
+            padding: 0.9375rem; border-top: 0.0625rem solid var(--border-color);
+            z-index: 100; flex-shrink: 0;
+        }
+        #now-playing {
+            text-align: center; font-weight: 600; margin-bottom: 0.625rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .progress-container {
+            width: 100%; height: 0.3125rem; background-color: #4A505C;
+            border-radius: 0.15625rem; cursor: pointer; margin-bottom: 0.625rem;
+        }
+        #progress-bar {
+            width: 0%; height: 100%; background-color: var(--accent-color);
+            border-radius: 0.15625rem;
+        }
+        .time-stamps {
+            display: flex; justify-content: space-between; font-size: 0.75em;
+            color: var(--secondary-text); margin-bottom: 0.3125rem;
+        }
+        .buttons-container {
+            display: flex; justify-content: center; align-items: center; gap: 1.25rem;
+        }
+        .buttons-container button {
+            background: none; border: none; color: var(--primary-text); cursor: pointer;
+        }
+        .buttons-container button i { font-size: 1.75rem; }
+        #play-pause-btn i { font-size: 2.5rem; color: var(--accent-color); }
+
+        ::-webkit-scrollbar { width: 0.5rem; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 0.25rem; }
+
+        /* --- Diseño para Escritorio --- */
+        @media screen and (min-width: 48rem) { /* 768px */
+            body { justify-content: center; align-items: center; display: flex; min-height: 100vh; }
+            .selection-buttons { flex-direction: row; }
+            .player-container {
+                width: 90%; max-width: 62.5rem; height: 80vh; max-height: 43.75rem;
+                border-radius: 0.75rem; box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.6);
+                background-color: var(--surface);
+            }
+            #playlist-toggle-btn, .overlay { display: none; } /* Ocultar en escritorio */
+            .app-header { display: none; } /* Ocultar header de móvil */
+
+            .main-view { flex-direction: row; }
+            .playlist-container {
+                display: block; position: static; width: 40%; transform: translateX(0);
+                border-bottom: none; border-right: 0.0625rem solid var(--border-color);
+            }
+            .lyrics-container {
+                width: 60%; background-color: var(--background);
+            }
+            .player-controls { position: static; background-color: var(--surface); }
         }
     </style>
 </head>
 <body>
-
-    <div class="player-container">
-        <h3 style="display:none;">Guitarra Electrica</h3>
-	<p id="now-playing" style="display:none;">Selecciona una canción para empezar</p>
-        
-        <audio id="audio-player" controls controlsList="nodownload"></audio>
     
-        <ul id="playlist">
+    <div id="mode-selection-overlay">
+        <div class="selection-box">
+             <h2>Elige un modo de práctica</h2>
+            <p>Selecciona la pista que deseas escuchar.</p>
+            <div class="selection-buttons">
+                <button id="with-guitar-btn">Secuencia Completa</button>
+                <button id="without-guitar-btn">Secuencia sin Guitarra</button>
+            </div>
+        </div>
+    </div>
 
-<li data-src="https://files.catbox.moe/ym19f8.mp3"
-data-lyric="Tono: E
-<b>Intro</b>
+    <div class="player-container hidden">
+        <header class="app-header">
+            <button id="playlist-toggle-btn">
+                <i class="ph ph-list"></i>
+            </button>
+            <span id="header-title">Letra y Acordes</span>
+        </header>
+        <div class="main-view">
+            <div class="playlist-container">
+                 <h3>Lista de Reproducción</h3>
+                 <ul id="playlist"></ul>
+            </div>
+            <div class="lyrics-container">
+                 <div id="lyrics-display">Selecciona una canción...</div>
+            </div>
+            <div class="overlay"></div>
+        </div>
+        <div class="player-controls">
+            <div id="now-playing">Reproductor de Música</div>
+            <div class="time-stamps">
+                <span id="current-time">0:00</span>
+                <span id="total-duration">0:00</span>
+            </div>
+            <div class="progress-container" id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="buttons-container">
+                <button id="prev-btn"><i class="ph ph-skip-back"></i></button>
+                <button id="play-pause-btn"><i class="ph-fill ph-play-circle"></i></button>
+                <button id="next-btn"><i class="ph ph-skip-forward"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="audio-player"></audio>
+
+    <script>
+        // --- 1. GESTIÓN DE DATOS ---
+        const playlistData = [
+            {
+                title: "1. Erestu_danilomontero",
+                src: {
+                    with_guitar: "https://files.catbox.moe/8hpk94.mp3",
+                    without_guitar: "https://files.catbox.moe/y6vj5o.mp3"
+                },
+                lyrics: `No hay información disponible`
+            },
+	    {
+                title: "2. Tedarelomejor_jar",
+                src: {
+                    with_guitar: "https://files.catbox.moe/ym19f8.mp3",
+                    without_guitar: "https://files.catbox.moe/0w130j.mp3"
+                },
+                lyrics: `Tono: E
+Intro
 //E A E A//
 
-<b>Verso</b>
+Verso
 E Asus2 E Bsus2
 E Asus2 E Bsus2
 
-<b>Precoro</b>
+Precoro
 F#m7 C#m
 Asus2 Bsus2
 
-<b>Coro</b>
+Coro
 C#m A5 E
 C#m  A5 Bsus2
 G#m C#m
 A5 F#m Bsus2
 
-<b>Puente</b>
+Puente
 E A E A
 
-<b>Verso</b>
+Verso
 E Asus2 E Bsus2
 E Asus2 E Bsus2
 
-<b>Precoro</b>
+Precoro
 F#m7 C#m
 Asus2 Bsus2
 
-<b>Coro X2</b>
+Coro X2
 C#m A5 E
 C#m  A5 Bsus2
 G#m C#m
 A5 F#m Bsus2
 
-<b>Solo guitarra</b>
+Solo guitarra
 C#m A E Bsus2 Bsus2
 
-<b>Precoro</b>
+Precoro
 F#m7 C#m
 Asus2 Bsus2
 
-<b>Coro X2</b>
+Coro X2
 C#m A5 E
 C#m  A5 Bsus2
 G#m C#m
 A5 F#m Bsus2
 
-<b>Salida Final</b>
+Salida Final
 E A 
 E A
 E A
-C#m Bsus2 A5">
-1. tedarelomejor_jar 
-</li>
-
- <li data-src="https://files.catbox.moe/pc8yd5.mp3"
-                data-lyric="Tono: Am
-<b>Intro (acordes)</b>
+C#m Bsus2 A5`
+            },
+	    {
+                title: "3. Serallenalatierra_MB_1992 (ofrenda)",
+                src: {
+                    with_guitar: "https://files.catbox.moe/pc8yd5.mp3",
+                    without_guitar: "https://files.catbox.moe/pc8yd5.mp3"
+                },
+                lyrics: `Tono: Am
+Intro (acordes)
 ////A G A G A G A//// (x4)
 
-<b>Verso1</b>
+Verso1
 Am               F     C               E
 Alza tus ojos y mira, la cosecha esta lista
    Am            G       F           E
 El tiempo a llegado, la mies esta madura
 
-<b>Verso2</b>
+Verso2
    Am                F      C       
 Esfuerzate y se valiente, levantate y 
     E
@@ -180,7 +334,7 @@ predica
   Am           G          F            E
 A todas las naciones, que Cristo es la vida
 
-<b>Coro X2</b>
+Coro X2
 Am  G     F   G           Am.      G
 Y   se - ra     llena la tierra de su 
  Am
@@ -188,93 +342,96 @@ gloria
 Am      G      F   G           E               Am
 Se cu - bri - ra      como las aguas cubren la mar
 
-<b>Puente (acordes)</b>
+Puente (acordes)
 //A G A G A G A// (x2)
 
-<b>Verso1</b>
-<b>Verso2</b>
-<b>Coro X2</b>
+Verso1
+Verso2
+Coro X2
 
-<b>Vozcoro</b>
+Vozcoro
 E               Am       E          Am
 No, no hay otro nombre, dado a los hombres
 Dm        Am         F        E
 Je - su - cris - to, es el Señor
 
-<b>Coro X2</b>
-<b>Coro X2</b>
+Coro X2
+Coro X2
 	 
-<b>Salida Final</b>
+Salida Final
 ////A G A G A G A//// (x4)
-A A (dos golpes)">
-2. Serallenalatierra_Marcos_1992 (Ofrenda)
-</li>
+A A (dos golpes)`
+            },
+	    {
+                title: "4. Desdemiinterior_hillsong",
+                src: {
+                    with_guitar: "https://files.catbox.moe/7at25k.mp3",
+                    without_guitar: "https://files.catbox.moe/hkow2r.mp3"
+                },
+                lyrics: `Tono:C
 
-
-<li data-src="https://files.catbox.moe/gw830q.mp3"
-data-lyric="">
-3. contodamialma_comandogaf 
-</li>			
-
-<li data-src="https://files.catbox.moe/7at25k.mp3"
-data-lyric="<b>Intro X2</b>
+Intro X2
 F F C G
 
-<b>Verse</b>
+Verse
 F F C G
 F F C G
 Am F C G
 Am F C G
 
-<b>PreChorus</b>
+PreChorus
 F C Am G
 F Am G Dm
 
 (Pausa 6 times)
 
-<b>Intro X2</b>
+Intro X2
 F F C G
 
-<b>Verse</b>
+Verse
 F F C G
 F F C G
 Am F C G
 Am F C G
 
-<b>PreChorus</b>
+PreChorus
 F C Am G
 F Am G Dm
 
-<b>Chorus</b>
+Chorus
 Am F C G
 Am F C G
 C F G Am
 F G F G
 
-<b>Instrumental</b>
-<b>Solo Guitarra</b>
+Instrumental
+Solo Guitarra
 F C G Dm
 F C G Dm
 
-<b>PreChorus</b>
+PreChorus
 F C Am G
 F Am G Dm
 
-<b>Chorus X2</b>
+Chorus X2
 Am F C G
 Am F C G
 C F G Am
 F G F G
          
-F G F G">
-4. desdemiinterior_hillsong 
-</li>
-
-<li data-src="https://files.catbox.moe/jfbese.mp3"
-data-lyric="Intro (verificar)
+F G F G`
+            },
+	    {
+                title: "5. Miroca_hillsong (llamado)",
+                src: {
+                    with_guitar: "https://files.catbox.moe/jfbese.mp3",
+                    without_guitar: "https://files.catbox.moe/wm0h0p.mp3"
+                },
+                lyrics: `Tono: C
+Intro
 C C  Am  Am  F  G
 
-<b>Verse X2</b>
+Verse X2
 C
 Mi esperanza está en Jesús
 F                         G
@@ -284,7 +441,7 @@ De nadie más dependeré
 F                 G            C
 Solo en su nombre confiaré
 
-<b>Chorus</b>
+Chorus
             F
 En Jesús
 Am      G
@@ -298,10 +455,10 @@ Sobre la tempestad
            C
 El es rey
 
-<b>Interlude </b>
+Interlude 
 C C
 
-<b>Verse</b>
+Verse
 C
 Cuando no puedo ver su faz
 F                                     G
@@ -313,17 +470,17 @@ Mi ancla firme esta en el
 F              G                      C
 Mi ancla firme esta en el
 
-<b>Chorus</b>
+Chorus
 
-<b>Reframe </b>
+Reframe 
 C C  Am  Am  F  G
 
-<b>Chorus X2</b>
+Chorus X2
 
-<b>Interlude </b>
+Interlude 
 C C  Am Am
 
-<b>Verse</b>
+Verse
 C
 Un dia el regresara
 F                                  G
@@ -333,75 +490,201 @@ Sin mancha ante el vendre
 F          G                 C
 Justificado por la fe
 
-<b>Instrumental X2</b>
+Instrumental X2
 F  Am  G  C/E
 F  Am  G  C/E
 F  Am  G  G  C C
 
-<b>Chorus X2</b>
+Chorus X2
 
-C C  Am Am C">
-5. miroca_hillsong (Llamado)
-</li>
+C C  Am Am C`
+            },
+            // ... resto de canciones
+        ];
 
-</ul>
-
-        <div id="lyrics-section">
-            <h3></h3>
-            <div id="lyrics-display">Selecciona una canción para ver su letra...</div>
-        </div>
-    </div>
-
-    <script>
+        // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
+        const modeSelectionOverlay = document.getElementById('mode-selection-overlay');
+        const playerContainer = document.querySelector('.player-container');
+        const withGuitarBtn = document.getElementById('with-guitar-btn');
+        const withoutGuitarBtn = document.getElementById('without-guitar-btn');
         const audioPlayer = document.getElementById('audio-player');
-        const playlistItems = document.querySelectorAll('#playlist li');
-        const nowPlaying = document.getElementById('now-playing');
-        const lyricsDisplay = document.getElementById('lyrics-display'); // Nuevo elemento
-    
-        playlistItems.forEach(item => {
-            item.addEventListener('click', function() {
-                const trackUrl = this.getAttribute('data-src');
-                const trackLyrics = this.getAttribute('data-lyric'); // Capturamos la letra
+        const playlistEl = document.getElementById('playlist');
+        const lyricsDisplayEl = document.getElementById('lyrics-display');
+        const nowPlayingEl = document.getElementById('now-playing');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalDurationEl = document.getElementById('total-duration');
+        // Nuevos elementos para el menú móvil
+        const playlistToggleBtn = document.getElementById('playlist-toggle-btn');
+        const playlistContainer = document.querySelector('.playlist-container');
+        const overlay = document.querySelector('.overlay');
 
-                if (!trackUrl || trackUrl.startsWith("URL_DIRECTA")) {
-                    nowPlaying.textContent = "Error: Agrega una URL de canción válida.";
-                    lyricsDisplay.textContent = "La URL de la canción no es válida.";
-                    return;
-                }
-                
-                // Reproducir audio
-                audioPlayer.src = trackUrl;
-                audioPlayer.play();
-                
-                // Actualizar info de "Ahora suena"
-                nowPlaying.textContent = `Ahora suena: ${this.textContent}`;
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let currentMode = 'with_guitar';
 
-                // MOSTRAR LA LETRA
-                if (trackLyrics) {
-                    lyricsDisplay.innerHTML = trackLyrics;
+        // --- 3. FUNCIONES PRINCIPALES ---
+
+        function initPlayer(mode) {
+            currentMode = mode;
+            modeSelectionOverlay.classList.add('hidden');
+            playerContainer.classList.remove('hidden');
+            populatePlaylist();
+            loadTrack(0);
+        }
+
+        function togglePlaylist() {
+            playlistContainer.classList.toggle('is-open');
+            overlay.classList.toggle('is-open');
+        }
+
+        function isChordLine(line) {
+            // ... (función sin cambios)
+            const trimmedLine = line.trim();
+            if (trimmedLine.length === 0) return false;
+            const chordPattern = /([A-G](#|b)?(m|maj|min|dim|aug|sus)?[2-79]?(\/[A-G](#|b)?)?)/g;
+            const nonChordChars = trimmedLine.replace(chordPattern, '').replace(/[\s/()|x\d]/g, '');
+            return nonChordChars.length < trimmedLine.length * 0.25;
+        }
+
+        function parseLyrics(lyricText) {
+            // ... (función sin cambios)
+            if (!lyricText || lyricText.trim().startsWith("No hay letra")) {
+                return "No hay letra disponible para esta canción.";
+            }
+            const lines = lyricText.split('\n');
+            let html = '';
+            const sectionTitles = ['intro', 'verse', 'verso', 'precoro', 'chorus', 'coro', 'puente', 'bridge', 'solo', 'salida', 'final', 'vozcoro', 'reframe', 'instrumental', 'interlude'];
+            const chordRegex = /\b([A-G](?:#|b)?(?:maj|min|m|sus|dim|aug|add)?[2-79]?(?:\/[A-G][#b]?)?)\b/g;
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (trimmedLine === '') { html += '\n'; continue; }
+                const firstWord = trimmedLine.split(' ')[0].toLowerCase().replace(/x\d|\d|:|\(|\)/g, '');
+                if (sectionTitles.includes(firstWord)) {
+                     html += `<b>${trimmedLine}</b>\n`;
+                } else if (isChordLine(line)) {
+                     const coloredLine = trimmedLine.replace(chordRegex, '<span class="chord">$&</span>');
+                     html += `${coloredLine}\n`;
                 } else {
-                    lyricsDisplay.textContent = "No hay info disponible para esta canción.";
+                     html += `${trimmedLine}\n`;
                 }
-                
-                // Resaltar en la lista
-                playlistItems.forEach(li => li.classList.remove('active'));
-                this.classList.add('active');
+            }
+            return html;
+        }
+
+        function loadTrack(trackIndex) {
+            currentTrackIndex = trackIndex;
+            const track = playlistData[trackIndex];
+            audioPlayer.src = track.src[currentMode]; 
+            nowPlayingEl.textContent = track.title;
+            lyricsDisplayEl.innerHTML = parseLyrics(track.lyrics);
+            updatePlaylistUI();
+        }
+
+        function playTrack() {
+            const playPromise = audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="ph-fill ph-pause-circle"></i>';
+                }).catch(error => {
+                    if (error.name !== 'AbortError') {
+                        console.error("Audio playback error:", error);
+                        isPlaying = false;
+                        playPauseBtn.innerHTML = '<i class="ph-fill ph-play-circle"></i>';
+                    }
+                });
+            }
+        }
+
+        function pauseTrack() {
+            isPlaying = false;
+            audioPlayer.pause();
+            playPauseBtn.innerHTML = '<i class="ph-fill ph-play-circle"></i>';
+        }
+
+        function playPauseTrack() { isPlaying ? pauseTrack() : playTrack(); }
+        
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % playlistData.length;
+            loadTrack(currentTrackIndex);
+            playTrack();
+        }
+        
+        function prevTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + playlistData.length) % playlistData.length;
+            loadTrack(currentTrackIndex);
+            playTrack();
+        }
+        
+        function updateProgress(e) {
+            const { duration, currentTime } = e.srcElement;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            totalDurationEl.textContent = formatTime(duration);
+            currentTimeEl.textContent = formatTime(currentTime);
+        }
+
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audioPlayer.duration;
+            audioPlayer.currentTime = (clickX / width) * duration;
+        }
+        
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function updatePlaylistUI() {
+            Array.from(playlistEl.children).forEach((item, index) => {
+                if (index === currentTrackIndex) { item.classList.add('active');
+                } else { item.classList.remove('active'); }
             });
+        }
+        
+        function populatePlaylist() {
+            playlistEl.innerHTML = '';
+            playlistData.forEach((track, index) => {
+                const li = document.createElement('li');
+                li.textContent = track.title;
+                li.addEventListener('click', () => {
+                    loadTrack(index);
+                    playTrack();
+                    if (window.innerWidth < 768) { // Cierra el menú al seleccionar canción en móvil
+                        togglePlaylist();
+                    }
+                });
+                playlistEl.appendChild(li);
+            });
+        }
+        
+        // --- 4. INICIALIZACIÓN Y EVENT LISTENERS ---
+        withGuitarBtn.addEventListener('click', () => initPlayer('with_guitar'));
+        withoutGuitarBtn.addEventListener('click', () => initPlayer('without_guitar'));
+        
+        playlistToggleBtn.addEventListener('click', togglePlaylist);
+        overlay.addEventListener('click', togglePlaylist);
+
+        playPauseBtn.addEventListener('click', playPauseTrack);
+        nextBtn.addEventListener('click', nextTrack);
+        prevBtn.addEventListener('click', prevTrack);
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('ended', nextTrack);
+        progressContainer.addEventListener('click', setProgress);
+        audioPlayer.addEventListener('loadedmetadata', () => {
+             totalDurationEl.textContent = formatTime(audioPlayer.duration);
         });
+
     </script>
-
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
 
