@@ -153,6 +153,7 @@
             margin: 0.5rem 0;
             padding: 0;
             cursor: default;
+            border-bottom: none; /* Corrección para evitar doble línea */
         }
          #playlist li.playlist-separator:hover {
             background-color: var(--border-color);
@@ -563,7 +564,7 @@ Chorus X2
 C C  Am Am C`
             },
            // ... resto de canciones
-          ];
+];
 
         // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
         const modeSelectionOverlay = document.getElementById('mode-selection-overlay');
@@ -581,7 +582,6 @@ C C  Am Am C`
         const progressBar = document.getElementById('progress-bar');
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
-        // Nuevos elementos para el menú móvil
         const playlistToggleBtn = document.getElementById('playlist-toggle-btn');
         const playlistContainer = document.querySelector('.playlist-container');
         const overlay = document.querySelector('.overlay');
@@ -599,8 +599,7 @@ C C  Am Am C`
             modeSelectionOverlay.classList.add('hidden');
             playerContainer.classList.remove('hidden');
 
-            // Versión estática basada en la hora de generación del código
-            playlistTitleEl.innerHTML = `Lista de Reproducción v0203`;
+            playlistTitleEl.innerHTML = `Lista de Reproducción v0220`;
 
             populatePlaylist();
             loadTrack(0);
@@ -610,7 +609,9 @@ C C  Am Am C`
                 initialPlaylistShown = true; 
                 togglePlaylist(); 
                 setTimeout(() => {
-                    togglePlaylist(); 
+                    if (playlistContainer.classList.contains('is-open')) {
+                        togglePlaylist(); 
+                    }
                 }, 4000);
             }
         }
@@ -626,7 +627,6 @@ C C  Am Am C`
         function hardRefresh() {
             location.reload(true);
         }
-
 
         function togglePlaylist() {
             playlistContainer.classList.toggle('is-open');
@@ -748,25 +748,29 @@ C C  Am Am C`
                 li.addEventListener('click', () => {
                     loadTrack(index);
                     playTrack();
-                    if (window.innerWidth < 768) { // Cierra el menú al seleccionar canción en móvil
+                    if (window.innerWidth < 768) {
                         togglePlaylist();
                     }
                 });
                 playlistEl.appendChild(li);
             });
             
-            // Agregar opciones de acción
+            const songItems = playlistEl.querySelectorAll('li');
+            if (songItems.length > 0) {
+                songItems[songItems.length - 1].style.borderBottom = 'none';
+            }
+
             const separator = document.createElement('li');
             separator.className = 'playlist-separator';
             
             const backLi = document.createElement('li');
             backLi.className = 'playlist-action';
-            backLi.innerHTML = `<i class="ph ph-arrow-left"></i> Volver a seleccionar modo`;
+            backLi.innerHTML = `<i class="ph ph-arrow-left"></i> Volver a las opciones`;
             backLi.addEventListener('click', goBackToSelection);
 
             const refreshLi = document.createElement('li');
             refreshLi.className = 'playlist-action';
-            refreshLi.innerHTML = `<i class="ph ph-arrow-clockwise"></i> Actualizar (Ctrl+F5)`;
+            refreshLi.innerHTML = `<i class="ph ph-arrow-clockwise"></i> Actualizar página`;
             refreshLi.addEventListener('click', hardRefresh);
 
             playlistEl.appendChild(separator);
@@ -778,7 +782,17 @@ C C  Am Am C`
         withGuitarBtn.addEventListener('click', () => initPlayer('with_guitar'));
         withoutGuitarBtn.addEventListener('click', () => initPlayer('without_guitar'));
         
-        playlistToggleBtn.addEventListener('click', togglePlaylist);
+        playlistToggleBtn.addEventListener('click', () => {
+            const isOpening = !playlistContainer.classList.contains('is-open');
+            togglePlaylist();
+            if (isOpening && window.innerWidth < 768) {
+                setTimeout(() => {
+                    if (playlistContainer.classList.contains('is-open')) {
+                        togglePlaylist();
+                    }
+                }, 4000);
+            }
+        });
         overlay.addEventListener('click', togglePlaylist);
 
         playPauseBtn.addEventListener('click', playPauseTrack);
