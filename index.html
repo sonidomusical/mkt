@@ -133,6 +133,31 @@
         }
         #playlist li:hover { background-color: rgba(255, 255, 255, 0.05); }
         #playlist li.active { background-color: var(--accent-color); color: #000; font-weight: bold; }
+        
+        /* Estilos para las nuevas opciones */
+        #playlist li.playlist-action {
+            color: var(--secondary-text);
+            font-style: italic;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        #playlist li.playlist-action:hover {
+            color: var(--accent-color);
+            background-color: rgba(0, 223, 184, 0.1);
+        }
+        #playlist li.playlist-separator {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 0.5rem 0;
+            padding: 0;
+            cursor: default;
+        }
+         #playlist li.playlist-separator:hover {
+            background-color: var(--border-color);
+        }
+
 
         /* Overlay para cerrar el menú */
         .overlay {
@@ -538,7 +563,7 @@ Chorus X2
 C C  Am Am C`
             },
            // ... resto de canciones
-         ];
+          ];
 
         // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
         const modeSelectionOverlay = document.getElementById('mode-selection-overlay');
@@ -574,10 +599,8 @@ C C  Am Am C`
             modeSelectionOverlay.classList.add('hidden');
             playerContainer.classList.remove('hidden');
 
-            const now = new Date();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            playlistTitleEl.innerHTML = `Lista de Reproducción v${minutes}${seconds}`;
+            // Versión estática basada en la hora de generación del código
+            playlistTitleEl.innerHTML = `Lista de Reproducción v0203`;
 
             populatePlaylist();
             loadTrack(0);
@@ -591,6 +614,19 @@ C C  Am Am C`
                 }, 4000);
             }
         }
+        
+        function goBackToSelection() {
+            pauseTrack();
+            playerContainer.classList.add('hidden');
+            modeSelectionOverlay.classList.remove('hidden');
+            currentTrackIndex = 0;
+            initialPlaylistShown = false;
+        }
+
+        function hardRefresh() {
+            location.reload(true);
+        }
+
 
         function togglePlaylist() {
             playlistContainer.classList.toggle('is-open');
@@ -598,7 +634,6 @@ C C  Am Am C`
         }
 
         function isChordLine(line) {
-            // ... (función sin cambios)
             const trimmedLine = line.trim();
             if (trimmedLine.length === 0) return false;
             const chordPattern = /([A-G](#|b)?(m|maj|min|dim|aug|sus)?[2-79]?(\/[A-G](#|b)?)?)/g;
@@ -607,7 +642,6 @@ C C  Am Am C`
         }
 
         function parseLyrics(lyricText) {
-            // ... (función sin cambios)
             if (!lyricText || lyricText.trim().startsWith("No hay letra")) {
                 return "No hay letra disponible para esta canción.";
             }
@@ -720,6 +754,24 @@ C C  Am Am C`
                 });
                 playlistEl.appendChild(li);
             });
+            
+            // Agregar opciones de acción
+            const separator = document.createElement('li');
+            separator.className = 'playlist-separator';
+            
+            const backLi = document.createElement('li');
+            backLi.className = 'playlist-action';
+            backLi.innerHTML = `<i class="ph ph-arrow-left"></i> Volver a seleccionar modo`;
+            backLi.addEventListener('click', goBackToSelection);
+
+            const refreshLi = document.createElement('li');
+            refreshLi.className = 'playlist-action';
+            refreshLi.innerHTML = `<i class="ph ph-arrow-clockwise"></i> Actualizar (Ctrl+F5)`;
+            refreshLi.addEventListener('click', hardRefresh);
+
+            playlistEl.appendChild(separator);
+            playlistEl.appendChild(backLi);
+            playlistEl.appendChild(refreshLi);
         }
         
         // --- 4. INICIALIZACIÓN Y EVENT LISTENERS ---
