@@ -538,7 +538,7 @@ Chorus X2
 C C  Am Am C`
             },
            // ... resto de canciones
-        ];
+         ];
 
         // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
         const modeSelectionOverlay = document.getElementById('mode-selection-overlay');
@@ -565,6 +565,7 @@ C C  Am Am C`
         let currentTrackIndex = 0;
         let isPlaying = false;
         let currentMode = 'with_guitar';
+        let initialPlaylistShown = false;
 
         // --- 3. FUNCIONES PRINCIPALES ---
 
@@ -581,6 +582,14 @@ C C  Am Am C`
             populatePlaylist();
             loadTrack(0);
             playTrack();
+
+            if (window.innerWidth < 768 && !initialPlaylistShown) {
+                initialPlaylistShown = true; 
+                togglePlaylist(); 
+                setTimeout(() => {
+                    togglePlaylist(); 
+                }, 4000);
+            }
         }
 
         function togglePlaylist() {
@@ -733,4 +742,3 @@ C C  Am Am C`
     </script>
 </body>
 </html>
-
