@@ -24,7 +24,7 @@
 
     <!-- Google Fonts y Phosphor Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -84,7 +84,10 @@
 
         /* --- Estructura del Reproductor --- */
         .player-container {
-            width: 100vw; height: 100vh; display: flex;
+            width: 100vw; 
+            height: 100vh; /* Fallback */
+            height: calc(var(--vh, 1vh) * 100);
+            display: flex;
             flex-direction: column; overflow: hidden;
             transition: opacity 0.3s ease-in-out;
         }
@@ -94,7 +97,6 @@
         /* --- Contenedor de Letras (Principal en Móvil) --- */
         .lyrics-container {
             padding: 1.25rem; 
-            padding-bottom: calc(1.25rem + var(--safe-area-bottom)); /* Espacio para no quedar oculto por el reproductor */
             box-sizing: border-box; overflow-y: auto;
             flex-grow: 1; background-color: var(--surface);
             width: 100%;
@@ -197,6 +199,7 @@
                 width: 90%; max-width: 62.5rem; height: 80vh; max-height: 43.75rem;
                 border-radius: 0.75rem; box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.6);
                 background-color: var(--surface);
+                height: 80vh; /* Restaurar vh para desktop */
             }
             #playlist-toggle-btn, .overlay { display: none; } /* Ocultar en escritorio */
             .app-header { display: none; } /* Ocultar header de móvil */
@@ -205,11 +208,9 @@
             .playlist-container {
                 display: block; position: static; width: 40%; transform: translateX(0);
                 border-bottom: none; border-right: 0.0625rem solid var(--border-color);
-                padding-bottom: 1.25rem; /* Restaurar padding */
             }
             .lyrics-container {
                 width: 60%; background-color: var(--background);
-                 padding-bottom: 1.25rem; /* Restaurar padding */
             }
             .player-controls { 
                 position: static; 
@@ -241,7 +242,7 @@
         </header>
         <div class="main-view">
             <div class="playlist-container">
-                 <h3>Lista de Reproducción</h3>
+                 <h3>Lista de Reproducción v2.1</h3>
                  <ul id="playlist"></ul>
             </div>
             <div class="lyrics-container">
@@ -269,6 +270,14 @@
     <audio id="audio-player"></audio>
 
     <script>
+        // --- VIEWPORT HEIGHT FIX FOR MOBILE BROWSERS ---
+        const setVh = () => {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+        window.addEventListener('resize', setVh);
+        setVh(); // Set initial value
+
         // --- 1. GESTIÓN DE DATOS ---
         const playlistData = [
             {
