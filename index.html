@@ -242,7 +242,7 @@
         </header>
         <div class="main-view">
             <div class="playlist-container">
-                 <h3>Lista de Reproducción v2.1</h3>
+                 <h3 id="playlist-title">Lista de Reproducción</h3>
                  <ul id="playlist"></ul>
             </div>
             <div class="lyrics-container">
@@ -560,6 +560,7 @@ C C  Am Am C`
         const playlistToggleBtn = document.getElementById('playlist-toggle-btn');
         const playlistContainer = document.querySelector('.playlist-container');
         const overlay = document.querySelector('.overlay');
+        const playlistTitleEl = document.getElementById('playlist-title');
 
         let currentTrackIndex = 0;
         let isPlaying = false;
@@ -571,6 +572,12 @@ C C  Am Am C`
             currentMode = mode;
             modeSelectionOverlay.classList.add('hidden');
             playerContainer.classList.remove('hidden');
+
+            const now = new Date();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            playlistTitleEl.innerHTML = `Lista de Reproducción v${minutes}${seconds}`;
+
             populatePlaylist();
             loadTrack(0);
             playTrack();
@@ -726,3 +733,4 @@ C C  Am Am C`
     </script>
 </body>
 </html>
+
