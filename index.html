@@ -339,7 +339,7 @@
                 lyrics: ``
             }
            // ... resto de canciones
-];
+ ];
 
         // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
         const modeSelectionOverlay = document.getElementById('mode-selection-overlay');
@@ -374,7 +374,7 @@
             modeSelectionOverlay.classList.add('hidden');
             playerContainer.classList.remove('hidden');
 
-            playlistTitleEl.innerHTML = `Lista de Reproducción v0220`;
+            playlistTitleEl.innerHTML = `Lista de Reproducción v0149`;
 
             populatePlaylist();
             loadTrack(0);
@@ -387,7 +387,7 @@
                     if (playlistContainer.classList.contains('is-open')) {
                         togglePlaylist(); 
                     }
-                }, 4000);
+                }, 5000);
             }
         }
         
@@ -530,7 +530,7 @@
                 playlistEl.appendChild(li);
             });
             
-            const songItems = playlistEl.querySelectorAll('li');
+            const songItems = playlistEl.querySelectorAll('li:not(.playlist-action):not(.playlist-separator)');
             if (songItems.length > 0) {
                 songItems[songItems.length - 1].style.borderBottom = 'none';
             }
@@ -538,19 +538,13 @@
             const separator = document.createElement('li');
             separator.className = 'playlist-separator';
             
-            const backLi = document.createElement('li');
-            backLi.className = 'playlist-action';
-            backLi.innerHTML = `<i class="ph ph-arrow-left"></i> Volver a las opciones`;
-            backLi.addEventListener('click', goBackToSelection);
-
-            const refreshLi = document.createElement('li');
-            refreshLi.className = 'playlist-action';
-            refreshLi.innerHTML = `<i class="ph ph-arrow-clockwise"></i> Actualizar página`;
-            refreshLi.addEventListener('click', hardRefresh);
+            const actionLi = document.createElement('li');
+            actionLi.className = 'playlist-action';
+            actionLi.innerHTML = `<i class="ph ph-arrow-left"></i> Volver a las opciones`;
+            actionLi.addEventListener('click', goBackToSelection);
 
             playlistEl.appendChild(separator);
-            playlistEl.appendChild(backLi);
-            playlistEl.appendChild(refreshLi);
+            playlistEl.appendChild(actionLi);
         }
         
         // --- 4. INICIALIZACIÓN Y EVENT LISTENERS ---
@@ -565,7 +559,7 @@
                     if (playlistContainer.classList.contains('is-open')) {
                         togglePlaylist();
                     }
-                }, 4000);
+                }, 5000);
             }
         });
         overlay.addEventListener('click', togglePlaylist);
@@ -583,4 +577,3 @@
     </script>
 </body>
 </html>
-
