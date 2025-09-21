@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rol de Limpieza - Mesanine</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 1rem; /* Adjusted padding for mobile */
+    background-color: #f8f9fa;
+    color: #212529;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    width: 100%; /* Full width on mobile */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden; /* Ensures the border-radius is respected by the table */
+  }
+  h2 {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    margin: 0;
+    background-color: #343a40;
+    color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+  }
+  .instructions {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1rem;
+    color: #495057;
+    background-color: #f8f9fa;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    text-align: center; /* Centered text for all cells */
+    padding: 0.75rem 1rem; /* Adjusted padding for mobile */
+    border-bottom: 1px solid #dee2e6; /* Horizontal lines for rows */
+  }
+  th {
+    background-color: #f1f3f5;
+    font-weight: 600;
+  }
+  td:nth-child(2) {
+    text-align: left; /* Align date to the left */
+  }
+  tr:last-child td {
+    border-bottom: none; /* Removes the border from the last row */
+  }
+  tr:hover {
+    background-color: #e9ecef;
+  }
+  .footer-text {
+    text-align: center;
+    padding: 1.5rem;
+    font-style: italic;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+  }
+  .footer-text p {
+    margin: 0;
+  }
+  .footer-text span {
+    display: block;
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+
+  /* Media Query for larger screens (tablets and desktops) */
+  @media (min-width: 768px) {
+    body {
+      padding: 2rem; /* Restore larger padding for desktops */
+    }
+    .container {
+      max-width: 700px; /* Adjusted max-width for the new column */
+    }
+    th, td {
+      padding: 1rem; /* Restore larger padding for table cells */
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>ROL DE LIMPIEZA - MESANINE</h2>
+  <p class="instructions">Hacer limpieza de paredes, piso, muebles, cables, equipos y accesorios, desechar la basura.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Fecha</th>
+        <th>Grupo</th>
+        <th>Comentarios</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39</td>
+        <td>dom 21 Setiembre</td>
+        <td>ERI / KAT</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>40</td>
+        <td>dom 28 Setiembre</td>
+        <td>JEA / ART</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>41</td>
+        <td>dom 05 Octubre</td>
+        <td>YHA / CRI</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>42</td>
+        <td>dom 12 Octubre</td>
+        <td>LEO / KAR</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>43</td>
+        <td>dom 19 Octubre</td>
+        <td>LUI / JOS</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>44</td>
+        <td>dom 26 Octubre</td>
+        <td>ERI / KAT</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="footer-text">
+    <p>"¿Quién puede subir al monte del Señor? ¿Quién puede estar en su lugar santo? Solo los de manos limpias y corazón puro..."</p>
+    <span>Salmo 24: 3-4</span>
+  </div>
+</div>
+
+</body>
+</html>
+
