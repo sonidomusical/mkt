@@ -38,7 +38,7 @@
   .header {
     background-color: var(--brand-color);
     color: white;
-    padding: 1.5rem 1rem;
+    padding: 0.5rem;
     text-align: center;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -62,7 +62,7 @@
     padding: 1rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    margin-top: 1.5rem;
+    margin-top: 0rem;
     text-align: center;
   }
   .summary-item {
@@ -86,7 +86,7 @@
     padding: 1rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
   .summary-table-title {
     margin: 0 0 1rem 0;
@@ -103,11 +103,11 @@
       border-collapse: collapse;
   }
   .summary-table th, .summary-table td {
-      padding: 0.75rem 0.5rem;
+      padding: 4px 8px;
       text-align: center;
       border-bottom: 1px solid var(--border-color);
       font-size: 0.9rem;
-      white-space: nowrap;
+      /* white-space: nowrap; ya no es necesario */
       vertical-align: middle;
   }
   .summary-table th {
@@ -118,7 +118,7 @@
       color: #495057;
   }
   .summary-table td:first-child {
-      text-align: center;
+      text-align: center; /* Centrado como el resto */
       font-weight: 500;
   }
   .summary-table tbody tr:nth-child(even) {
@@ -246,7 +246,7 @@
 
 <div class="header">
   <h2>CULTOS DE ORACIÓN</h2>
-  <p>Asistencia - Setiembre 2025</p>
+  <p>Registro de asistencia - Setiembre 2025</p>
 </div>
 
 <div class="main-container">
@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusClass = 'tag-incompleto'; // Clase gris unificada
                 if (presentCount > 0) {
                     statusIcon = icons.parcial;
-                    statusLabel = 'Asistencia Parcial';
+                    statusLabel = 'Parcial';
                 } else {
                     statusIcon = icons.noAsistio;
                     statusLabel = 'No asistió';
@@ -481,6 +481,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
-
-
 
