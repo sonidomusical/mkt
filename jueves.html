@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registro de Asistencia v3</title>
+<title>Registro de Asistencia v4 (Móvil)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --color-presente: #28a745;
@@ -15,116 +15,108 @@
     --color-falta-bg: #fbeaea;
     --color-pendiente: #6c757d;
     --color-pendiente-bg: #f8f9fa;
-    --brand-color: #343a40; /* Dark Slate */
+    --brand-color: #343a40;
     --text-color: #212529;
-    --background-color: #f8f9fa;
-    --border-color: #dee2e6;
+    --background-color: #f4f7f9;
+    --border-color: #e9ecef;
   }
 
   body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    padding: 1rem;
     background-color: var(--background-color);
     color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    font-size: 14px;
+    font-size: 16px;
   }
-  .container {
-    width: 100%;
-    max-width: 800px; /* Ancho aumentado para la nueva columna */
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    border: 1px solid var(--border-color);
+  .main-container {
+    padding: 1rem;
   }
-  h2 {
-    text-align: center;
-    padding: 1.25rem 0.5rem;
-    margin: 0;
+  .header {
     background-color: var(--brand-color);
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1.5rem;
-  }
-  .instructions {
+    color: white;
+    padding: 1.5rem 1rem;
     text-align: center;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    color: #6c757d;
-    background-color: #fdfdff;
-    border-bottom: 1px solid var(--border-color);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: -1rem -1rem 0 -1rem; /* Extend to screen edges */
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+  .header h2 {
+    margin: 0;
+    font-weight: 700;
   }
-  th, td {
+  .header p {
+    margin: 0.25rem 0 0;
+    opacity: 0.9;
+    font-weight: 400;
+  }
+  
+  /* --- Resumen Superior --- */
+  .summary-section {
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    margin-top: 1.5rem;
     text-align: center;
-    padding: 0.75rem 0.5rem;
-    border-bottom: 1px solid var(--border-color);
-    vertical-align: middle;
   }
-  th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.75rem;
+  .summary-item {
+    flex-grow: 1;
+  }
+  .summary-item .day {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-pendiente);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
-  td:first-child {
-    text-align: left;
-    padding-left: 1rem;
-    font-weight: 600;
+  .summary-item .count {
+    font-size: 1.75rem;
+    font-weight: 700;
     color: var(--brand-color);
   }
-  tbody tr:hover {
-      background-color: #f1f3f5;
-  }
 
-  /* --- Estilos de los badges de asistencia --- */
-  .status-badge {
+  /* --- Lista de Tarjetas de Asistencia --- */
+  .attendance-list {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+  .person-card {
+    background-color: #ffffff;
     border-radius: 12px;
-    padding: 0.25rem 0.75rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .person-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .person-name {
     font-weight: 600;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    display: inline-block;
-    width: 80px; /* Ancho fijo para consistencia */
-    text-align: center;
-  }
-  .status-badge:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  .status-presente { color: var(--color-presente); background-color: var(--color-presente-bg); }
-  .status-falta { color: var(--color-falta); background-color: var(--color-falta-bg); }
-  .status-pendiente { color: var(--color-pendiente); background-color: var(--color-pendiente-bg); }
-  /* Fin de estilos de badges */
-
-  /* Columna de Resumen y Barra de Progreso */
-  td:last-child {
-      min-width: 120px;
+    font-size: 1.2rem;
+    color: var(--brand-color);
   }
   .progress-container {
       display: flex;
       align-items: center;
-      justify-content: center;
   }
   .progress-bar-bg {
-      width: 60%;
+      width: 80px;
       background-color: #e9ecef;
       border-radius: 6px;
       overflow: hidden;
-      height: 12px;
-      margin-left: 10px;
+      height: 8px;
+      margin-left: 8px;
   }
   .progress-bar {
       height: 100%;
@@ -135,49 +127,55 @@
   .percentage-text {
       font-weight: 600;
       font-size: 0.9rem;
-      width: 40px; /* Ancho fijo para que no se mueva la barra */
-      text-align: right;
-  }
-  /* Fin de estilos de progreso */
-  
-  tfoot tr {
-    background-color: #f8f9fa;
-    border-top: 2px solid #adb5bd;
-  }
-  tfoot td {
-    font-weight: 700;
-    color: var(--brand-color);
-    font-size: 1.1rem;
-  }
-  td.total-label {
-      text-align: right;
-      padding-right: 1rem;
   }
 
-  @media (min-width: 768px) {
-    body {
-      padding: 2rem;
-      align-items: center;
-      font-size: 16px;
-    }
+  .card-body {
+    display: grid;
+    gap: 0.75rem;
   }
+  .attendance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+  }
+  .attendance-day {
+      font-weight: 500;
+      color: #495057;
+  }
+  .status-badge {
+    border-radius: 12px;
+    padding: 0.25rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    width: 85px;
+    text-align: center;
+  }
+  .status-presente { color: var(--color-presente); background-color: var(--color-presente-bg); border: 1px solid var(--color-presente);}
+  .status-falta { color: var(--color-falta); background-color: var(--color-falta-bg); border: 1px solid var(--color-falta);}
+  .status-pendiente { color: var(--color-pendiente); background-color: var(--color-pendiente-bg); border: 1px solid #ced4da;}
+
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="header">
   <h2>CULTOS DE ORACIÓN</h2>
-  <p class="instructions">Asistencia al culto de oración - Setiembre 2025</p>
-  <table>
-    <thead></thead>
-    <tbody></tbody>
-    <tfoot></tfoot>
-  </table>
-  <div class="footer-text">
-    <p>"¿Quién puede subir al monte del Señor? ¿Quién puede estar en su lugar santo? Solo los de manos limpias y corazón puro..."</p>
-    <span>Salmo 24: 3-4</span>
+  <p>Asistencia - Setiembre 2025</p>
+</div>
+
+<div class="main-container">
+  <div id="summary-section" class="summary-section">
+    <!-- Resumen se generará aquí -->
+  </div>
+  <div id="attendance-list" class="attendance-list">
+    <!-- Tarjetas de personas se generarán aquí -->
   </div>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -192,10 +190,8 @@ document.addEventListener('DOMContentLoaded', function() {
         '25': { 'JUA': 'presente', 'HP': 'presente', 'JAI': 'falta' }
     };
 
-    const table = document.querySelector("table");
-    const tableHead = table.querySelector("thead");
-    const tableBody = table.querySelector("tbody");
-    const tableFoot = table.querySelector("tfoot");
+    const summarySection = document.getElementById("summary-section");
+    const attendanceList = document.getElementById("attendance-list");
 
     const statusText = { presente: 'Presente', falta: 'Falta', pendiente: 'Pendiente' };
     const statusCycle = ['pendiente', 'presente', 'falta'];
@@ -213,55 +209,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const thursdaysOfMonth = getThursdaysInMonth(year, month);
 
-    function renderTable() {
-        tableHead.innerHTML = '';
-        tableBody.innerHTML = '';
+    function renderApp() {
+        attendanceList.innerHTML = ''; // Limpiar lista
         
-        const headerRow = document.createElement('tr');
-        headerRow.innerHTML = '<th>Nombre</th>';
-        thursdaysOfMonth.forEach(day => headerRow.innerHTML += `<th>Jueves ${day}</th>`);
-        headerRow.innerHTML += '<th>% Asist.</th>';
-        tableHead.appendChild(headerRow);
-
         names.forEach(name => {
-            const row = document.createElement('tr');
-            row.dataset.name = name; // Identificador para la fila
-            let cellHTML = `<td>${name}</td>`;
-            
+            const card = document.createElement('div');
+            card.className = 'person-card';
+            card.dataset.name = name;
+
+            let cardBodyHTML = '';
             thursdaysOfMonth.forEach(day => {
                 const dayStr = day.toString();
                 if (!attendanceData[dayStr]) attendanceData[dayStr] = {};
                 const status = attendanceData[dayStr][name] || 'pendiente';
-
-                cellHTML += `<td>
-                    <div class="status-badge status-${status}" data-name="${name}" data-day="${dayStr}">
-                        ${statusText[status]}
+                cardBodyHTML += `
+                    <div class="attendance-item">
+                        <span class="attendance-day">Jueves ${dayStr}</span>
+                        <div class="status-badge status-${status}" data-name="${name}" data-day="${dayStr}">
+                            ${statusText[status]}
+                        </div>
                     </div>
-                </td>`;
+                `;
             });
-
-            // Celda para el resumen
-            cellHTML += `
-                <td>
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="person-name">${name}</span>
                     <div class="progress-container">
                         <span class="percentage-text">0%</span>
                         <div class="progress-bar-bg">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
                     </div>
-                </td>`;
+                </div>
+                <div class="card-body">
+                    ${cardBodyHTML}
+                </div>
+            `;
             
-            row.innerHTML = cellHTML;
-            tableBody.appendChild(row);
+            attendanceList.appendChild(card);
             updatePersonSummary(name);
         });
 
-        // Add event listeners after rendering
+        // Add event listeners after rendering all cards
         document.querySelectorAll('.status-badge').forEach(badge => {
             badge.addEventListener('click', toggleStatus);
         });
 
-        updateTotals();
+        updateSummarySection();
     }
     
     function toggleStatus(event) {
@@ -276,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         badge.className = `status-badge status-${nextStatus}`;
         badge.textContent = statusText[nextStatus];
         
-        updateTotals();
+        updateSummarySection();
         updatePersonSummary(name);
     }
     
@@ -286,56 +281,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let presentCount = 0;
         thursdaysOfMonth.forEach(day => {
-            const dayStr = day.toString();
-            if (attendanceData[dayStr] && attendanceData[dayStr][name] === 'presente') {
+            if (attendanceData[day.toString()] && attendanceData[day.toString()][name] === 'presente') {
                 presentCount++;
             }
         });
 
         const percentage = Math.round((presentCount / totalDays) * 100);
-        const row = tableBody.querySelector(`tr[data-name="${name}"]`);
-        if (row) {
-            row.querySelector('.percentage-text').textContent = `${percentage}%`;
-            row.querySelector('.progress-bar').style.width = `${percentage}%`;
+        const card = attendanceList.querySelector(`.person-card[data-name="${name}"]`);
+        if (card) {
+            card.querySelector('.percentage-text').textContent = `${percentage}%`;
+            card.querySelector('.progress-bar').style.width = `${percentage}%`;
         }
     }
 
-    function updateTotals() {
-        tableFoot.innerHTML = '';
-        const footerRow = document.createElement('tr');
-        let footerHTML = `<td class="total-label" colspan="${thursdaysOfMonth.length + 1}">TOTAL PRESENTES:</td>`;
-        let totalPresent = 0;
-        
-        Object.values(attendanceData).forEach(dayData => {
-            totalPresent += Object.values(dayData).filter(s => s === 'presente').length;
-        });
-
-        footerHTML += `<td>${totalPresent}</td>`;
-        footerRow.innerHTML = footerHTML;
-        tableFoot.appendChild(footerRow);
-    }
-    
-    // Cambié el cálculo del pie de página para mostrar un total general en lugar de por día,
-    // ya que la barra de progreso ya da un resumen por persona.
-    function updateTotals() {
-        tableFoot.innerHTML = '';
-        const footerRow = document.createElement('tr');
-        footerRow.innerHTML = `<td class="total-label">TOTALES</td>`;
-
+    function updateSummarySection() {
+        summarySection.innerHTML = '';
         thursdaysOfMonth.forEach(day => {
             const dayStr = day.toString();
             let presentCount = 0;
             if (attendanceData[dayStr]) {
                 presentCount = Object.values(attendanceData[dayStr]).filter(s => s === 'presente').length;
             }
-            footerRow.innerHTML += `<td>${presentCount}</td>`;
+
+            const summaryItem = document.createElement('div');
+            summaryItem.className = 'summary-item';
+            summaryItem.innerHTML = `
+                <div class="day">Jueves ${dayStr}</div>
+                <div class="count">${presentCount}</div>
+            `;
+            summarySection.appendChild(summaryItem);
         });
-        
-        footerRow.innerHTML += '<td></td>'; // Celda vacía para la columna de resumen
-        tableFoot.appendChild(footerRow);
     }
 
-    renderTable();
+    renderApp();
 });
 </script>
 
