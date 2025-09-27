@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Asistencia v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-presente: #28a745;
+    --color-presente-bg: #e9f5ea;
+    --color-falta: #dc3545;
+    --color-falta-bg: #fbeaea;
+    --color-pendiente: #6c757d;
+    --color-pendiente-bg: #f8f9fa;
+    --brand-color: #343a40; /* Dark Slate */
+    --text-color: #212529;
+    --background-color: #f8f9fa;
+    --border-color: #dee2e6;
+  }
+
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 1rem;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+  .container {
+    width: 100%;
+    max-width: 800px; /* Ancho aumentado para la nueva columna */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+  }
+  h2 {
+    text-align: center;
+    padding: 1.25rem 0.5rem;
+    margin: 0;
+    background-color: var(--brand-color);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+  .instructions {
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: #6c757d;
+    background-color: #fdfdff;
+    border-bottom: 1px solid var(--border-color);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  th, td {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+  }
+  th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  td:first-child {
+    text-align: left;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: var(--brand-color);
+  }
+  tbody tr:hover {
+      background-color: #f1f3f5;
+  }
+
+  /* --- Estilos de los badges de asistencia --- */
+  .status-badge {
+    border-radius: 12px;
+    padding: 0.25rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+    width: 80px; /* Ancho fijo para consistencia */
+    text-align: center;
+  }
+  .status-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .status-presente { color: var(--color-presente); background-color: var(--color-presente-bg); }
+  .status-falta { color: var(--color-falta); background-color: var(--color-falta-bg); }
+  .status-pendiente { color: var(--color-pendiente); background-color: var(--color-pendiente-bg); }
+  /* Fin de estilos de badges */
+
+  /* Columna de Resumen y Barra de Progreso */
+  td:last-child {
+      min-width: 120px;
+  }
+  .progress-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  .progress-bar-bg {
+      width: 60%;
+      background-color: #e9ecef;
+      border-radius: 6px;
+      overflow: hidden;
+      height: 12px;
+      margin-left: 10px;
+  }
+  .progress-bar {
+      height: 100%;
+      background-color: var(--brand-color);
+      border-radius: 6px;
+      transition: width 0.3s ease-in-out;
+  }
+  .percentage-text {
+      font-weight: 600;
+      font-size: 0.9rem;
+      width: 40px; /* Ancho fijo para que no se mueva la barra */
+      text-align: right;
+  }
+  /* Fin de estilos de progreso */
+  
+  tfoot tr {
+    background-color: #f8f9fa;
+    border-top: 2px solid #adb5bd;
+  }
+  tfoot td {
+    font-weight: 700;
+    color: var(--brand-color);
+    font-size: 1.1rem;
+  }
+  td.total-label {
+      text-align: right;
+      padding-right: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      padding: 2rem;
+      align-items: center;
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>CULTOS DE ORACIÓN</h2>
+  <p class="instructions">Asistencia al culto de oración - Setiembre 2025</p>
+  <table>
+    <thead></thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
+  </table>
+  <div class="footer-text">
+    <p>"¿Quién puede subir al monte del Señor? ¿Quién puede estar en su lugar santo? Solo los de manos limpias y corazón puro..."</p>
+    <span>Salmo 24: 3-4</span>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const year = 2025;
+    const month = 8;
+    const names = ["JEA", "ART", "YHA", "CRI", "LEO", "KAR", "LUI", "JOS", "ERI", "KAT", "JUA", "HP", "JAI"];
+    names.sort();
+
+    let attendanceData = {
+        '11': { 'CRI': 'presente', 'JAI': 'presente' },
+        '18': { 'HP': 'presente', 'JAI': 'presente', 'LEO': 'presente', 'YHA': 'presente' },
+        '25': { 'JUA': 'presente', 'HP': 'presente', 'JAI': 'falta' }
+    };
+
+    const table = document.querySelector("table");
+    const tableHead = table.querySelector("thead");
+    const tableBody = table.querySelector("tbody");
+    const tableFoot = table.querySelector("tfoot");
+
+    const statusText = { presente: 'Presente', falta: 'Falta', pendiente: 'Pendiente' };
+    const statusCycle = ['pendiente', 'presente', 'falta'];
+
+    function getThursdaysInMonth(year, month) {
+        const thursdays = [];
+        const date = new Date(year, month, 1);
+        while (date.getDay() !== 4) { date.setDate(date.getDate() + 1); }
+        while (date.getMonth() === month) {
+            thursdays.push(date.getDate());
+            date.setDate(date.getDate() + 7);
+        }
+        return thursdays;
+    }
+
+    const thursdaysOfMonth = getThursdaysInMonth(year, month);
+
+    function renderTable() {
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+        
+        const headerRow = document.createElement('tr');
+        headerRow.innerHTML = '<th>Nombre</th>';
+        thursdaysOfMonth.forEach(day => headerRow.innerHTML += `<th>Jueves ${day}</th>`);
+        headerRow.innerHTML += '<th>% Asist.</th>';
+        tableHead.appendChild(headerRow);
+
+        names.forEach(name => {
+            const row = document.createElement('tr');
+            row.dataset.name = name; // Identificador para la fila
+            let cellHTML = `<td>${name}</td>`;
+            
+            thursdaysOfMonth.forEach(day => {
+                const dayStr = day.toString();
+                if (!attendanceData[dayStr]) attendanceData[dayStr] = {};
+                const status = attendanceData[dayStr][name] || 'pendiente';
+
+                cellHTML += `<td>
+                    <div class="status-badge status-${status}" data-name="${name}" data-day="${dayStr}">
+                        ${statusText[status]}
+                    </div>
+                </td>`;
+            });
+
+            // Celda para el resumen
+            cellHTML += `
+                <td>
+                    <div class="progress-container">
+                        <span class="percentage-text">0%</span>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </td>`;
+            
+            row.innerHTML = cellHTML;
+            tableBody.appendChild(row);
+            updatePersonSummary(name);
+        });
+
+        // Add event listeners after rendering
+        document.querySelectorAll('.status-badge').forEach(badge => {
+            badge.addEventListener('click', toggleStatus);
+        });
+
+        updateTotals();
+    }
+    
+    function toggleStatus(event) {
+        const { name, day } = event.currentTarget.dataset;
+        const currentStatus = attendanceData[day][name] || 'pendiente';
+        const currentIndex = statusCycle.indexOf(currentStatus);
+        const nextStatus = statusCycle[(currentIndex + 1) % statusCycle.length];
+        
+        attendanceData[day][name] = nextStatus;
+        
+        const badge = event.currentTarget;
+        badge.className = `status-badge status-${nextStatus}`;
+        badge.textContent = statusText[nextStatus];
+        
+        updateTotals();
+        updatePersonSummary(name);
+    }
+    
+    function updatePersonSummary(name) {
+        const totalDays = thursdaysOfMonth.length;
+        if (totalDays === 0) return;
+
+        let presentCount = 0;
+        thursdaysOfMonth.forEach(day => {
+            const dayStr = day.toString();
+            if (attendanceData[dayStr] && attendanceData[dayStr][name] === 'presente') {
+                presentCount++;
+            }
+        });
+
+        const percentage = Math.round((presentCount / totalDays) * 100);
+        const row = tableBody.querySelector(`tr[data-name="${name}"]`);
+        if (row) {
+            row.querySelector('.percentage-text').textContent = `${percentage}%`;
+            row.querySelector('.progress-bar').style.width = `${percentage}%`;
+        }
+    }
+
+    function updateTotals() {
+        tableFoot.innerHTML = '';
+        const footerRow = document.createElement('tr');
+        let footerHTML = `<td class="total-label" colspan="${thursdaysOfMonth.length + 1}">TOTAL PRESENTES:</td>`;
+        let totalPresent = 0;
+        
+        Object.values(attendanceData).forEach(dayData => {
+            totalPresent += Object.values(dayData).filter(s => s === 'presente').length;
+        });
+
+        footerHTML += `<td>${totalPresent}</td>`;
+        footerRow.innerHTML = footerHTML;
+        tableFoot.appendChild(footerRow);
+    }
+    
+    // Cambié el cálculo del pie de página para mostrar un total general en lugar de por día,
+    // ya que la barra de progreso ya da un resumen por persona.
+    function updateTotals() {
+        tableFoot.innerHTML = '';
+        const footerRow = document.createElement('tr');
+        footerRow.innerHTML = `<td class="total-label">TOTALES</td>`;
+
+        thursdaysOfMonth.forEach(day => {
+            const dayStr = day.toString();
+            let presentCount = 0;
+            if (attendanceData[dayStr]) {
+                presentCount = Object.values(attendanceData[dayStr]).filter(s => s === 'presente').length;
+            }
+            footerRow.innerHTML += `<td>${presentCount}</td>`;
+        });
+        
+        footerRow.innerHTML += '<td></td>'; // Celda vacía para la columna de resumen
+        tableFoot.appendChild(footerRow);
+    }
+
+    renderTable();
+});
+</script>
+
+</body>
+</html>
+
