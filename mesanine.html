@@ -163,40 +163,48 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Array with month names in Spanish
+    // Array with month names in Spanish for date parsing
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    // Get today's date
+    // Get today's date and reset time to compare dates only
     const today = new Date();
-    // In this example, we manually set the date to 26/09/2025 to match the request
-    // const today = new Date('2025-09-26T12:00:00');
+    const todayStartOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     // Calculate the date for the upcoming Sunday of the current week (week starts on Monday)
     const dayOfWeek = today.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
-    // The logic considers Monday as the start of the week.
     const daysToAdd = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-    
     const targetSunday = new Date(today);
     targetSunday.setDate(today.getDate() + daysToAdd);
 
-    // Format the target date string to match the table format (e.g., "28 Setiembre")
-    const targetDay = targetSunday.getDate().toString().padStart(2, '0');
-    const targetMonthName = meses[targetSunday.getMonth()];
-    const targetDateString = `${targetDay} ${targetMonthName}`;
-
-    // Find the corresponding row in the table and highlight it
+    // Find all table rows to iterate
     const tableRows = document.querySelectorAll("tbody tr");
+
     tableRows.forEach(row => {
       const dateCell = row.cells[1];
-      if (dateCell) {
-        const cellText = dateCell.textContent.trim();
-        if (cellText.includes(targetDateString)) {
+      const commentCell = row.cells[3];
+      if (!dateCell || !commentCell) return; // Skip if cells are not found
+
+      // --- Date Parsing from Cell Text (e.g., "28 Setiembre") ---
+      const cellText = dateCell.textContent.trim();
+      const parts = cellText.split(' ');
+      const day = parseInt(parts[0], 10);
+      const monthName = parts[1];
+      const monthIndex = meses.indexOf(monthName);
+
+      if (!isNaN(day) && monthIndex !== -1) {
+        const rowDate = new Date(today.getFullYear(), monthIndex, day);
+        
+        // --- Status Logic ---
+        // Compare dates by converting them to strings to avoid timezone issues
+        const isCurrentWeekSunday = rowDate.toDateString() === targetSunday.toDateString();
+
+        if (isCurrentWeekSunday) {
+          // If it's the current week's task, highlight it and set a motivational status
           row.classList.add('highlight');
-          // Add text to the comments cell
-          const commentCell = row.cells[3];
-          if (commentCell) {
-            commentCell.textContent = "En Proceso";
-          }
+          commentCell.textContent = "Trabajo en proceso";
+        } else if (rowDate < todayStartOfDay) {
+          // If the date has already passed, set a celebratory status
+          commentCell.textContent = "¡Gracias, por servir!";
         }
       }
     });
@@ -205,4 +213,5 @@
 
 </body>
 </html>
+
 
