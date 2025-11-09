@@ -54,34 +54,6 @@
             overflow: hidden; /* Evitar scroll en el body */
         }
 
-        /* --- Pantalla de Selección de Modo --- */
-        #mode-selection-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--background);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 200; flex-direction: column; padding: 1.25rem;
-            box-sizing: border-box; transition: opacity 0.3s ease-in-out;
-        }
-        .selection-box {
-            text-align: center; background-color: var(--surface);
-            padding: 2rem; border-radius: 0.75rem;
-            box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.4);
-        }
-        .selection-box h2 { margin-top: 0; color: var(--primary-text); }
-        .selection-box p { color: var(--secondary-text); margin-bottom: 1.5rem; }
-        .selection-buttons { display: flex; flex-direction: column; gap: 1rem; }
-        .selection-buttons button {
-            padding: 0.9375rem 1.5rem; font-size: 1rem; font-weight: 600;
-            border: none; border-radius: 0.5rem; cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-        .selection-buttons button:hover { transform: scale(1.05); }
-        #with-guitar-btn { background-color: var(--accent-color); color: #000; }
-        #without-guitar-btn {
-            background-color: transparent; color: var(--accent-color);
-            border: 2px solid var(--accent-color);
-        }
-
         /* --- Estructura del Reproductor --- */
         .player-container {
             width: 100vw; 
@@ -89,42 +61,34 @@
             height: calc(var(--vh, 1vh) * 100);
             display: flex;
             flex-direction: column; overflow: hidden;
-            transition: opacity 0.3s ease-in-out;
         }
-        .hidden { opacity: 0; pointer-events: none; }
-        .main-view { position: relative; flex-grow: 1; display: flex; overflow: hidden; }
 
-        /* --- Contenedor de Letras (Principal en Móvil) --- */
-        .lyrics-container {
-            padding: 1.25rem; 
-            box-sizing: border-box; overflow-y: auto;
-            flex-grow: 1; background-color: var(--surface);
-            width: 100%;
+        .main-view { 
+            position: relative; 
+            flex-grow: 1; 
+            display: flex; 
+            overflow: hidden; 
         }
-        .lyrics-container h3 {
-            margin-top: 0; color: var(--secondary-text);
+
+        /* --- Panel de Playlist --- */
+        .playlist-container {
+            width: 100%;
+            padding: 1.25rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            /* Dejar espacio para el reproductor fijo */
+            padding-bottom: 120px; /* Ajusta este valor si el reproductor cambia de tamaño */
+        }
+        
+        #playlist-title {
+            margin-top: 0; 
+            color: var(--primary-text);
+            font-weight: 700;
+            font-size: 1.25rem;
             border-bottom: 0.0625rem solid var(--border-color);
             padding-bottom: 0.625rem;
         }
-        #lyrics-display {
-            white-space: pre-wrap; line-height: 1.6em; color: var(--primary-text);
-            font-size: 1.1em; background-color: transparent; padding: 1rem 0;
-        }
-        #lyrics-display b { color: var(--accent-color); }
-        #lyrics-display .chord { color: var(--chord-color); font-weight: 600; }
-        
-        /* --- Panel de Playlist (Menú lateral en móvil) --- */
-        .playlist-container {
-            position: absolute; top: 0; left: 0; bottom: 0;
-            width: 80%; max-width: 300px;
-            background-color: var(--surface);
-            border-right: 0.0625rem solid var(--border-color);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 150; padding: 1.25rem; box-sizing: border-box;
-            overflow-y: auto;
-        }
-        .playlist-container.is-open { transform: translateX(0); }
+
         #playlist { list-style: none; padding: 0; margin: 0; }
         #playlist li {
             padding: 0.9375rem; border-radius: 0.5rem; margin-bottom: 0.5rem;
@@ -134,51 +98,6 @@
         #playlist li:hover { background-color: rgba(255, 255, 255, 0.05); }
         #playlist li.active { background-color: var(--accent-color); color: #000; font-weight: bold; }
         
-        /* Estilos para las nuevas opciones */
-        #playlist li.playlist-action {
-            color: var(--secondary-text);
-            font-style: italic;
-            border-bottom: none;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        #playlist li.playlist-action:hover {
-            color: var(--accent-color);
-            background-color: rgba(0, 223, 184, 0.1);
-        }
-        #playlist li.playlist-separator {
-            height: 1px;
-            background-color: var(--border-color);
-            margin: 0.5rem 0;
-            padding: 0;
-            cursor: default;
-            border-bottom: none; /* Corrección para evitar doble línea */
-        }
-         #playlist li.playlist-separator:hover {
-            background-color: var(--border-color);
-        }
-
-
-        /* Overlay para cerrar el menú */
-        .overlay {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0,0,0,0.5); z-index: 140;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-        .overlay.is-open { opacity: 1; visibility: visible; }
-        
-        /* Header con botón de menú */
-        .app-header {
-            padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color);
-            display: flex; align-items: center;
-            flex-shrink: 0;
-        }
-        #playlist-toggle-btn {
-            background: none; border: none; color: var(--primary-text);
-            padding: 0.5rem; margin-right: 1rem; cursor: pointer;
-        }
 
         /* --- Barra de Reproductor Fija --- */
         .player-controls {
@@ -187,6 +106,10 @@
             padding-bottom: calc(0.9375rem + var(--safe-area-bottom)); /* Espacio para la barra del navegador */
             border-top: 0.0625rem solid var(--border-color);
             z-index: 100; flex-shrink: 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
         #now-playing {
             text-align: center; font-weight: 600; margin-bottom: 0.625rem;
@@ -219,65 +142,41 @@
 
         /* --- Diseño para Escritorio --- */
         @media screen and (min-width: 48rem) { /* 768px */
-            body { justify-content: center; align-items: center; display: flex; min-height: 100vh; }
-            .selection-buttons { flex-direction: row; }
+            body { 
+                justify-content: center; 
+                align-items: center; 
+                display: flex; 
+                min-height: 100vh; 
+            }
             .player-container {
-                width: 90%; max-width: 62.5rem; height: 80vh; max-height: 43.75rem;
-                border-radius: 0.75rem; box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.6);
+                width: 90%; 
+                max-width: 450px; /* Ancho de tipo móvil */
+                height: 80vh; 
+                max-height: 800px;
+                border-radius: 0.75rem; 
+                box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.6);
                 background-color: var(--surface);
-                height: 80vh; /* Restaurar vh para desktop */
-            }
-            #playlist-toggle-btn, .overlay { display: none; } /* Ocultar en escritorio */
-            .app-header { display: none; } /* Ocultar header de móvil */
-
-            .main-view { flex-direction: row; }
-            .playlist-container {
-                display: block; position: static; width: 40%; transform: translateX(0);
-                border-bottom: none; border-right: 0.0625rem solid var(--border-color);
-            }
-            .lyrics-container {
-                width: 60%; background-color: var(--background);
+                position: relative;
             }
             .player-controls { 
-                position: static; 
-                background-color: var(--surface); 
-                padding-bottom: 0.9375rem; /* Restaurar padding */
+                position: absolute; /* Se pega al fondo del .player-container */
+                border-radius: 0 0 0.75rem 0.75rem;
+                padding-bottom: 0.9375rem; /* Restaurar padding en desktop */
             }
         }
     </style>
 </head>
 <body>
     
-    <div id="mode-selection-overlay">
-        <div class="selection-box">
-             <h2>Elige un modo de práctica</h2>
-            <p>Selecciona la pista que deseas escuchar.</p>
-            <div class="selection-buttons">
-                <button id="with-guitar-btn">Secuencia Completa</button>
-                <button id="without-guitar-btn">Secuencia sin Guitarra</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="player-container hidden">
-        <header class="app-header">
-            <button id="playlist-toggle-btn">
-                <i class="ph ph-list"></i>
-            </button>
-            <span id="header-title">Letra y Acordes</span>
-        </header>
+    <div class="player-container">
         <div class="main-view">
             <div class="playlist-container">
-                 <h3 id="playlist-title">Lista de Reproducción</h3>
+                 <h3 id="playlist-title">Lista de Reproducción v0301</h3>
                  <ul id="playlist"></ul>
             </div>
-            <div class="lyrics-container">
-                 <div id="lyrics-display">Selecciona una canción...</div>
-            </div>
-            <div class="overlay"></div>
         </div>
         <div class="player-controls">
-            <div id="now-playing">Reproductor de Música</div>
+            <div id="now-playing">Selecciona una canción</div>
             <div class="time-stamps">
                 <span id="current-time">0:00</span>
                 <span id="total-duration">0:00</span>
@@ -307,52 +206,30 @@
         // --- 1. GESTIÓN DE DATOS ---
         const playlistData = [
             {
-                title: "1. El nombre de Jesús - Elim Adorando",
-                src: {
-                    with_guitar: "https://files.catbox.moe/gm2ui8.mp3",
-                    without_guitar: "https://files.catbox.moe/yt6i1j.mp3"
-                },
-                lyrics: `El nombre de Jesús - Elim Adorando
-Tonalidad: E`
+                title: "1. tedarelomejor_jar",
+                src: "https://files.catbox.moe/ym19f8.mp3"
             },
-	    {
-                title: "2. De gloria en gloria - Marcos Barrientos (Ofrenda)",
-                src: {
-                    with_guitar: "https://files.catbox.moe/1jbdx3.mp3",
-                    without_guitar: "https://files.catbox.moe/g75jp5.mp3"
-                },
-                lyrics: `De gloria en gloria - Marcos Barrientos
-Tonalidad: Bb`
+            {
+                title: "2. Serallenalatierra_Marcos_1992 (Ofrenda)",
+                src: "https://files.catbox.moe/pc8yd5.mp3"
             },
-	    {
-                title: "3. Mi Sanador - Miel San Marcos",
-                src: {
-                    with_guitar: "https://files.catbox.moe/pwydwm.mp3",
-                    without_guitar: "https://files.catbox.moe/6r792z.mp3"
-                },
-                lyrics: `Mi Sanador - Miel San Marcos
-Tonalidad: C`
+            {
+                title: "3. contodamialma_comandogaf",
+                src: "https://files.catbox.moe/gw830q.mp3"
             },
-	    {
-                title: "4. Venga tu reino - Generación 12",
-                src: {
-                    with_guitar: "https://files.catbox.moe/9jeuq3.mp3",
-                    without_guitar: "https://files.catbox.moe/mw2amm.mp3"
-                },
-                lyrics: `Venga tu reino - Generación 12
-Tonalidad: C`
+            {
+                title: "4. desdemiinterior_hillsong",
+                src: "https://files.catbox.moe/7at25k.mp3"
+            },
+            {
+                title: "5. miroca_hillsong (Llamado)",
+                src: "https://files.catbox.moe/jfbese.mp3"
             }
-           // ... resto de canciones
- ];
+        ];
 
         // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
-        const modeSelectionOverlay = document.getElementById('mode-selection-overlay');
-        const playerContainer = document.querySelector('.player-container');
-        const withGuitarBtn = document.getElementById('with-guitar-btn');
-        const withoutGuitarBtn = document.getElementById('without-guitar-btn');
         const audioPlayer = document.getElementById('audio-player');
         const playlistEl = document.getElementById('playlist');
-        const lyricsDisplayEl = document.getElementById('lyrics-display');
         const nowPlayingEl = document.getElementById('now-playing');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const prevBtn = document.getElementById('prev-btn');
@@ -361,100 +238,35 @@ Tonalidad: C`
         const progressBar = document.getElementById('progress-bar');
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
-        const playlistToggleBtn = document.getElementById('playlist-toggle-btn');
-        const playlistContainer = document.querySelector('.playlist-container');
-        const overlay = document.querySelector('.overlay');
-        const playlistTitleEl = document.getElementById('playlist-title');
 
         let currentTrackIndex = 0;
         let isPlaying = false;
-        let currentMode = 'with_guitar';
-        let initialPlaylistShown = false;
 
         // --- 3. FUNCIONES PRINCIPALES ---
-
-        function initPlayer(mode) {
-            currentMode = mode;
-            modeSelectionOverlay.classList.add('hidden');
-            playerContainer.classList.remove('hidden');
-
-            playlistTitleEl.innerHTML = `Lista de Reproducción v0149`;
-
-            populatePlaylist();
-            loadTrack(0);
-            playTrack();
-
-            if (window.innerWidth < 768 && !initialPlaylistShown) {
-                initialPlaylistShown = true; 
-                togglePlaylist(); 
-                setTimeout(() => {
-                    if (playlistContainer.classList.contains('is-open')) {
-                        togglePlaylist(); 
-                    }
-                }, 5000);
-            }
-        }
         
-        function goBackToSelection() {
-            pauseTrack();
-            playerContainer.classList.add('hidden');
-            modeSelectionOverlay.classList.remove('hidden');
-            currentTrackIndex = 0;
-            initialPlaylistShown = false;
-        }
-
-        function hardRefresh() {
-            location.reload(true);
-        }
-
-        function togglePlaylist() {
-            playlistContainer.classList.toggle('is-open');
-            overlay.classList.toggle('is-open');
-        }
-
-        function isChordLine(line) {
-            const trimmedLine = line.trim();
-            if (trimmedLine.length === 0) return false;
-            const chordPattern = /([A-G](#|b)?(m|maj|min|dim|aug|sus)?[2-79]?(\/[A-G](#|b)?)?)/g;
-            const nonChordChars = trimmedLine.replace(chordPattern, '').replace(/[\s/()|x\d]/g, '');
-            return nonChordChars.length < trimmedLine.length * 0.25;
-        }
-
-        function parseLyrics(lyricText) {
-            if (!lyricText || lyricText.trim().startsWith("No hay letra")) {
-                return "No hay letra disponible para esta canción.";
-            }
-            const lines = lyricText.split('\n');
-            let html = '';
-            const sectionTitles = ['intro', 'verse', 'verso', 'precoro', 'chorus', 'coro', 'puente', 'bridge', 'solo', 'salida', 'final', 'vozcoro', 'reframe', 'instrumental', 'interlude'];
-            const chordRegex = /\b([A-G](?:#|b)?(?:maj|min|m|sus|dim|aug|add)?[2-79]?(?:\/[A-G][#b]?)?)\b/g;
-
-            for (const line of lines) {
-                const trimmedLine = line.trim();
-                if (trimmedLine === '') { html += '\n'; continue; }
-                const firstWord = trimmedLine.split(' ')[0].toLowerCase().replace(/x\d|\d|:|\(|\)/g, '');
-                if (sectionTitles.includes(firstWord)) {
-                     html += `<b>${trimmedLine}</b>\n`;
-                } else if (isChordLine(line)) {
-                     const coloredLine = trimmedLine.replace(chordRegex, '<span class="chord">$&</span>');
-                     html += `${coloredLine}\n`;
-                } else {
-                     html += `${trimmedLine}\n`;
-                }
-            }
-            return html;
-        }
-
         function loadTrack(trackIndex) {
+            // Si el índice es inválido (primera carga), solo configura la UI
+            if (trackIndex < 0 || trackIndex >= playlistData.length) {
+                nowPlayingEl.textContent = "Selecciona una canción";
+                currentTimeEl.textContent = "0:00";
+                totalDurationEl.textContent = "0:00";
+                progressBar.style.width = "0%";
+                return;
+            }
+
             currentTrackIndex = trackIndex;
             const track = playlistData[trackIndex];
-            audioPlayer.src = track.src[currentMode]; 
+            audioPlayer.src = track.src; 
             nowPlayingEl.textContent = track.title;
-            lyricsDisplayEl.innerHTML = parseLyrics(track.lyrics);
             updatePlaylistUI();
         }
 
         function playTrack() {
+            // No intentar reproducir si no hay una canción válida cargada
+            if (!audioPlayer.src || audioPlayer.src === window.location.href) {
+                return;
+            }
+            
             const playPromise = audioPlayer.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
@@ -476,7 +288,13 @@ Tonalidad: C`
             playPauseBtn.innerHTML = '<i class="ph-fill ph-play-circle"></i>';
         }
 
-        function playPauseTrack() { isPlaying ? pauseTrack() : playTrack(); }
+        function playPauseTrack() { 
+            // Si no hay canción cargada, no hacer nada
+            if (!audioPlayer.src || audioPlayer.src === window.location.href) {
+                return;
+            }
+            isPlaying ? pauseTrack() : playTrack(); 
+        }
         
         function nextTrack() {
             currentTrackIndex = (currentTrackIndex + 1) % playlistData.length;
@@ -499,10 +317,13 @@ Tonalidad: C`
         }
 
         function setProgress(e) {
-            const width = this.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audioPlayer.duration;
-            audioPlayer.currentTime = (clickX / width) * duration;
+            // Solo permitir si hay una canción cargada
+            if (audioPlayer.duration) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                const duration = audioPlayer.duration;
+                audioPlayer.currentTime = (clickX / width) * duration;
+            }
         }
         
         function formatTime(seconds) {
@@ -513,9 +334,13 @@ Tonalidad: C`
         }
 
         function updatePlaylistUI() {
-            Array.from(playlistEl.children).forEach((item, index) => {
-                if (index === currentTrackIndex) { item.classList.add('active');
-                } else { item.classList.remove('active'); }
+             Array.from(playlistEl.children).forEach((item, index) => {
+                // Solo aplicar 'active' si el índice coincide
+                if (index === currentTrackIndex) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
             });
         }
         
@@ -527,63 +352,29 @@ Tonalidad: C`
                 li.addEventListener('click', () => {
                     loadTrack(index);
                     playTrack();
-                    if (window.innerWidth < 768) {
-                        togglePlaylist();
-                    }
                 });
                 playlistEl.appendChild(li);
             });
-            
-            const songItems = playlistEl.querySelectorAll('li:not(.playlist-action):not(.playlist-separator)');
-            if (songItems.length > 0) {
-                songItems[songItems.length - 1].style.borderBottom = 'none';
-            }
-
-            const separator = document.createElement('li');
-            separator.className = 'playlist-separator';
-            
-            const actionLi = document.createElement('li');
-            actionLi.className = 'playlist-action';
-            actionLi.innerHTML = `<i class="ph ph-arrow-left"></i> Volver a las opciones`;
-            actionLi.addEventListener('click', goBackToSelection);
-
-            playlistEl.appendChild(separator);
-            playlistEl.appendChild(actionLi);
         }
         
         // --- 4. INICIALIZACIÓN Y EVENT LISTENERS ---
-        withGuitarBtn.addEventListener('click', () => initPlayer('with_guitar'));
-        withoutGuitarBtn.addEventListener('click', () => initPlayer('without_guitar'));
         
-        playlistToggleBtn.addEventListener('click', () => {
-            const isOpening = !playlistContainer.classList.contains('is-open');
-            togglePlaylist();
-            if (isOpening && window.innerWidth < 768) {
-                setTimeout(() => {
-                    if (playlistContainer.classList.contains('is-open')) {
-                        togglePlaylist();
-                    }
-                }, 5000);
-            }
-        });
-        overlay.addEventListener('click', togglePlaylist);
-
         playPauseBtn.addEventListener('click', playPauseTrack);
         nextBtn.addEventListener('click', nextTrack);
         prevBtn.addEventListener('click', prevTrack);
         audioPlayer.addEventListener('timeupdate', updateProgress);
         audioPlayer.addEventListener('ended', nextTrack);
         progressContainer.addEventListener('click', setProgress);
+        
         audioPlayer.addEventListener('loadedmetadata', () => {
              totalDurationEl.textContent = formatTime(audioPlayer.duration);
         });
+        
+        // Inicializar la lista de reproducción al cargar la página
+        populatePlaylist();
+        // No cargamos ninguna canción por defecto
+        loadTrack(-1); // Carga la UI en estado "vacío"
 
     </script>
 </body>
 </html>
-
-
-
-
-
-
