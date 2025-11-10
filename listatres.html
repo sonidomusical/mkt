@@ -171,7 +171,7 @@
     <div class="player-container">
         <div class="main-view">
             <div class="playlist-container">
-                 <h3 id="playlist-title">Lista de Reproducción v0301</h3>
+                 <h3 id="playlist-title">Lista de Reproducción v0330</h3>
                  <ul id="playlist"></ul>
             </div>
         </div>
@@ -207,23 +207,28 @@
         const playlistData = [
             {
                 title: "1. Eres tu - Danilo Montero (Ofrenda)",
-                src: "https://files.catbox.moe/8hpk94.mp3"
+                src: "https://files.catbox.moe/8hpk94.mp3",
+                comment: "Tono-Secuencia: Ab | Tono-Ensayado: Ab" // <-- Nuevo campo
             },
             {
                 title: "2. Tu pueblo dice gracias - Jacobo",
-                src: "https://files.catbox.moe/84e1h7.mp3"
+                src: "https://files.catbox.moe/84e1h7.mp3",
+                comment: "Tono-Secuencia: G | Tono-Ensayado: G" // <-- Nuevo campo
             },
             {
-                title: "3. Por tu nombre - Hillsong (A)",
-                src: "https://files.catbox.moe/kc6h85.mp3"
+                title: "3. Por tu nombre - Hillsong",
+                src: "https://files.catbox.moe/kc6h85.mp3",
+                comment: "Tono-Secuencia: A | Tono-Ensayado: G" // <-- Nuevo campo
             },
             {
                 title: "4. A ti me rindo - Hillsong",
-                src: "https://files.catbox.moe/u9h87a.mp3"
+                src: "https://files.catbox.moe/u9h87a.mp3",
+                comment: "Tono-Secuencia: F | Tono-Ensayado: B" // <-- Nuevo campo
             },
             {
                 title: "5. Mi roca - Hillsong (Llamado)",
-                src: "https://files.catbox.moe/jfbese.mp3"
+                src: "https://files.catbox.moe/jfbese.mp3",
+                comment: "Tono-Secuencia: C | Tono-Ensayado: C" // <-- Nuevo campo
             }
         ];
 
@@ -257,7 +262,11 @@
             currentTrackIndex = trackIndex;
             const track = playlistData[trackIndex];
             audioPlayer.src = track.src; 
-            nowPlayingEl.textContent = track.title;
+            
+            // --- CAMBIO APLICADO ---
+            // Usar el comentario, si existe; si no, usar el título
+            nowPlayingEl.textContent = track.comment || track.title; 
+            
             updatePlaylistUI();
         }
 
@@ -348,7 +357,7 @@
             playlistEl.innerHTML = '';
             playlistData.forEach((track, index) => {
                 const li = document.createElement('li');
-                li.textContent = track.title;
+                li.textContent = track.title; // La lista sigue mostrando el título
                 li.addEventListener('click', () => {
                     loadTrack(index);
                     playTrack();
