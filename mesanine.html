@@ -12,35 +12,39 @@
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 1rem; /* Padding for mobile */
-    background-color: #ffffff; /* Reverted to white background */
-    color: #212121; /* Default dark text color for the page */
+    background-color: #f9f9f9; /* Actualizado: Fondo gris muy claro */
+    color: #333333; /* Actualizado: Texto oscuro */
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    font-size: 14px; /* Further reduced base font size for mobile */
+    font-size: 14px; /* Base font size for mobile */
   }
   .container {
     width: 100%; /* Full width on mobile */
-    background-color: #ffffff; /* Reverted to white card background */
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+    background-color: #ffffff; /* Actualizado: Tarjeta blanca */
+    border-radius: 24px; /* Bordes más redondeados estilo App */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Sombra suave y moderna */
     overflow: hidden;
+    margin-top: 1rem;
   }
   h2 {
     text-align: center;
-    padding: 1rem 0.5rem;
+    padding: 1.5rem 1rem;
     margin: 0;
-    background-color: #000000; /* Black header */
-    color: #ffffff; /* White text for high contrast */
+    /* Actualizado: Degradado Amarillo-Naranja inspirado en la imagen */
+    background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
+    color: #ffffff;
     font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
   .instructions {
     text-align: center;
-    padding: 0.5rem 1rem;
-    font-size: 0.95rem; /* Slightly smaller font for instructions */
-    color: #757575; /* Grey for secondary info */
-    background-color: #fafafa;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: #757575; /* Texto gris medio */
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
   }
   table {
     width: 100%;
@@ -48,39 +52,45 @@
   }
   th, td {
     text-align: center;
-    padding: 0.8rem 0.5rem; /* Adjusted padding */
-    border-bottom: 1px solid #e0e0e0; /* Light grey borders */
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #f0f0f0; /* Bordes muy sutiles */
   }
   th {
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     font-weight: 600;
-    color: #424242;
+    color: #FF9800; /* Encabezados en naranja para combinar */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
   }
   td:nth-child(3) {
     white-space: nowrap;
+    font-weight: 600; /* Nombres en negrita */
   }
   tr:last-child td {
     border-bottom: none;
   }
   tr:not(.highlight):hover {
-    background-color: #f5f5f5;
+    background-color: #fafafa;
   }
   /* Style for the highlighted row */
   .highlight {
-    background-color: #2979FF; /* Vibrant Material Design blue */
-    color: #ffffff; /* White text for high contrast on blue */
+    background-color: #FFF3E0; /* Actualizado: Fondo naranja muy pálido */
+    color: #E65100; /* Actualizado: Texto naranja oscuro fuerte */
     font-weight: 700;
+    border-left: 4px solid #FF9800; /* Acento visual en el borde */
   }
   tr.highlight:hover {
-    background-color: #448aff; /* A slightly lighter blue for hover effect */
+    background-color: #FFE0B2;
   }
   .footer-text {
     text-align: center;
     padding: 1.5rem;
     font-style: italic;
-    color: #757575;
-    background-color: #fafafa;
+    color: #9e9e9e;
+    background-color: #ffffff;
     line-height: 1.6;
+    border-top: 1px solid #f0f0f0;
   }
   .footer-text p {
     margin: 0;
@@ -89,7 +99,7 @@
     display: block;
     margin-top: 0.5rem;
     font-weight: bold;
-    color: #424242;
+    color: #FF9800; /* Acento naranja */
   }
 
   /* Media Query for larger screens */
@@ -101,9 +111,10 @@
     }
     .container {
       max-width: 700px;
+      margin-top: 0;
     }
     th, td {
-      padding: 1rem;
+      padding: 1.2rem 1rem;
     }
   }
 </style>
@@ -122,37 +133,8 @@
         <th>Comentarios</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>40</td>
-        <td>28 Setiembre</td>
-        <td>JEA / ART</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>41</td>
-        <td>05 Octubre</td>
-        <td>YHA / CRI</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>42</td>
-        <td>12 Octubre</td>
-        <td>LEO / KAR</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>43</td>
-        <td>19 Octubre</td>
-        <td>LUI / JOS</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>44</td>
-        <td>26 Octubre</td>
-        <td>ERI / KAT</td>
-        <td></td>
-      </tr>
+    <tbody id="schedule-body">
+      <!-- Las filas se generarán automáticamente con JavaScript -->
     </tbody>
   </table>
   <div class="footer-text">
@@ -163,55 +145,94 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Array with month names in Spanish for date parsing
+    // Configuración de Grupos en orden cíclico
+    const groups = ["JEA / ART", "YHA / CRI", "LEO / KAR", "LUI / JOS", "ERI / KAT"];
+    
+    // Datos de referencia (Ancla) para calcular la secuencia correcta
+    // Usamos el 23 de Noviembre 2025 como referencia: Semana #48, Grupo "LUI / JOS"
+    const anchorDate = new Date(2025, 10, 23); // Mes 10 es Noviembre (0-indexado)
+    const anchorWeekNum = 48; 
+    const anchorGroupIndex = 3; // Índice de "LUI / JOS" en el array groups
+    
+    const msPerDay = 24 * 60 * 60 * 1000;
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    // Get today's date and reset time to compare dates only
+    // 1. Determinar el Domingo de la semana ACTUAL
     const today = new Date();
-    const todayStartOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    // Ajustar 'today' para pruebas si es necesario (ej: new Date(2025, 11, 9))
+    const dayOfWeek = today.getDay(); // 0=Domingo, 1=Lunes...
+    // Si hoy es Lunes (1), faltan 6 días para el domingo. Si es Domingo (0), es hoy.
+    // Asumimos que la semana empieza el Lunes, por lo tanto el Domingo es el último día.
+    const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+    
+    const currentWeekSunday = new Date(today);
+    currentWeekSunday.setDate(today.getDate() + daysUntilSunday);
+    
+    // 2. Determinar la fecha de inicio de la tabla
+    // Requerimiento: "La segunda fila debe ser la semana actual"
+    // Por lo tanto, la primera fila es la semana anterior (Current - 7 días)
+    const startSunday = new Date(currentWeekSunday);
+    startSunday.setDate(currentWeekSunday.getDate() - 7);
 
-    // Calculate the date for the upcoming Sunday of the current week (week starts on Monday)
-    const dayOfWeek = today.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
-    const daysToAdd = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-    const targetSunday = new Date(today);
-    targetSunday.setDate(today.getDate() + daysToAdd);
+    const tbody = document.getElementById('schedule-body');
+    tbody.innerHTML = ''; // Limpiar contenido previo
 
-    // Find all table rows to iterate
-    const tableRows = document.querySelectorAll("tbody tr");
+    // 3. Generar 6 filas
+    for (let i = 0; i < 6; i++) {
+        // Calcular fecha para esta fila
+        const rowDate = new Date(startSunday);
+        rowDate.setDate(startSunday.getDate() + (i * 7));
 
-    tableRows.forEach(row => {
-      const dateCell = row.cells[1];
-      const commentCell = row.cells[3];
-      if (!dateCell || !commentCell) return; // Skip if cells are not found
-
-      // --- Date Parsing from Cell Text (e.g., "28 Setiembre") ---
-      const cellText = dateCell.textContent.trim();
-      const parts = cellText.split(' ');
-      const day = parseInt(parts[0], 10);
-      const monthName = parts[1];
-      const monthIndex = meses.indexOf(monthName);
-
-      if (!isNaN(day) && monthIndex !== -1) {
-        const rowDate = new Date(today.getFullYear(), monthIndex, day);
+        // Calcular diferencia de semanas respecto al ancla para determinar # y Grupo
+        const diffTime = rowDate - anchorDate;
+        const diffWeeks = Math.round(diffTime / (msPerDay * 7));
         
-        // --- Status Logic ---
-        // Compare dates by converting them to strings to avoid timezone issues
-        const isCurrentWeekSunday = rowDate.toDateString() === targetSunday.toDateString();
+        // Calcular número de semana
+        const weekNum = anchorWeekNum + diffWeeks;
+        
+        // Calcular índice del grupo (manejo de módulo negativo para fechas pasadas si fuera necesario)
+        let groupIndex = (anchorGroupIndex + diffWeeks) % groups.length;
+        if (groupIndex < 0) groupIndex += groups.length;
+        
+        const groupName = groups[groupIndex];
+        
+        // Formatear fecha
+        const dayStr = rowDate.getDate().toString().padStart(2, '0');
+        const monthStr = meses[rowDate.getMonth()];
+        const dateStr = `${dayStr} ${monthStr}`;
 
-        if (isCurrentWeekSunday) {
-          // If it's the current week's task, highlight it and set a motivational status
-          row.classList.add('highlight');
-          commentCell.textContent = "Trabajo en proceso";
-        } else if (rowDate < todayStartOfDay) {
-          // If the date has already passed, set a celebratory status
-          commentCell.textContent = "¡Gracias, por servir!";
+        // Determinar estado y estilos
+        let trClass = "";
+        let commentText = "";
+        
+        // Lógica de estado basada en la posición fija solicitada
+        if (i === 0) {
+            // Primera fila (Semana pasada)
+            commentText = "¡Gracias, por servir!";
+        } else if (i === 1) {
+            // Segunda fila (Semana actual - REQUERIMIENTO)
+            trClass = "highlight";
+            commentText = "Trabajo en proceso";
+        } else {
+            // Filas futuras
+            commentText = "";
         }
-      }
-    });
+
+        // Crear elemento HTML
+        const tr = document.createElement('tr');
+        if (trClass) tr.className = trClass;
+        
+        tr.innerHTML = `
+            <td>${weekNum}</td>
+            <td>${dateStr}</td>
+            <td>${groupName}</td>
+            <td>${commentText}</td>
+        `;
+        
+        tbody.appendChild(tr);
+    }
   });
 </script>
 
 </body>
 </html>
-
-
