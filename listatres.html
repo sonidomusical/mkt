@@ -89,8 +89,8 @@
             padding: 1.5rem; /* Un poco más de espacio */
             box-sizing: border-box;
             overflow-y: auto;
-            /* Aumentado el padding inferior para asegurar que se vea el final de la lista */
-            padding-bottom: 180px; 
+            /* AUMENTADO: Espacio extra para que el último item no quede oculto tras el reproductor más alto */
+            padding-bottom: 200px; 
         }
         
         #playlist-title {
@@ -143,8 +143,8 @@
             background-color: rgba(255, 255, 255, 0.95); /* Blanco translúcido */
             backdrop-filter: blur(10px);
             padding: 1rem 1.5rem; 
-            /* AUMENTADO significativamente para evitar superposición con botones de Android */
-            padding-bottom: calc(2.5rem + var(--safe-area-bottom)); 
+            /* AUMENTADO CRÍTICAMENTE: 3.5rem extra para levantar los botones sobre la barra de Android */
+            padding-bottom: calc(3.5rem + var(--safe-area-bottom)); 
             border-top: 1px solid var(--border-color);
             z-index: 100; flex-shrink: 0;
             position: absolute; /* Absolute relative to container */
@@ -237,7 +237,7 @@
     <div class="player-container">
         <div class="main-view">
             <div class="playlist-container">
-                 <div id="playlist-title">Lista de Reproducción v0306</div>
+                 <div id="playlist-title">Lista de Reproducción v0307</div>
                  <ul id="playlist"></ul>
             </div>
         </div>
