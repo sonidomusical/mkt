@@ -9,20 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Nueva paleta de colores armonizada */
-    --color-perfect: #00796b; /* Verde azulado para 100%+ */
-    --color-perfect-bg: #e0f2f1;
-    --color-warning: #ffa000; /* Ámbar para progreso intermedio */
-    --color-warning-bg: #fff3e0;
-    --color-fail: #ef5350;    /* Rojo suave para no cumplido */
+    /* Paleta extraída de la imagen (Naranja / Ámbar) */
+    --color-perfect: #ffa000; 
+    --color-perfect-bg: #fff3e0; 
+    --color-warning: #fb8c00; 
+    --color-warning-bg: #fff8e1;
+    --color-fail: #ef5350;    
     --color-fail-bg: #ffebee;
-    --color-pendiente: #6c757d;
-    --color-pendiente-bg: #f8f9fa;
+    --color-pendiente: #757575; 
+    --color-pendiente-bg: #f5f5f5;
     
-    --brand-color: var(--color-perfect); /* El color de marca ahora es el color de "éxito" */
-    --text-color: #212529;
-    --background-color: #f4f7f9;
-    --border-color: #e9ecef;
+    --brand-color: var(--color-perfect); 
+    --text-color: #333333;
+    --background-color: #fcfcfc;
+    --border-color: #eeeeee;
   }
 
   body {
@@ -42,15 +42,16 @@
     text-align: center;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin: -1rem -1rem 0 -1rem; /* Extend to screen edges */
+    margin: -1rem -1rem 0 -1rem;
   }
   .header h2 {
     margin: 1rem 0 0 0;
     font-weight: 700;
+    letter-spacing: 0.5px;
   }
   .header p {
     margin: 0.25rem 0 0;
-    opacity: 0.9;
+    opacity: 0.95;
     font-weight: 400;
   }
   
@@ -96,39 +97,54 @@
     font-weight: 600;
   }
   .table-wrapper {
-      overflow-x: auto; /* Para scroll horizontal si es necesario */
+      overflow-x: auto;
   }
   .summary-table {
       width: 100%;
       border-collapse: collapse;
   }
   .summary-table th, .summary-table td {
-      padding: 4px 8px;
+      padding: 6px 8px; /* Un poco más de aire */
       text-align: center;
       border-bottom: 1px solid var(--border-color);
       font-size: 0.9rem;
-      /* white-space: nowrap; ya no es necesario */
       vertical-align: middle;
   }
   .summary-table th {
       font-weight: 600;
-      background-color: #f8f9fa;
+      background-color: transparent; /* Fondo retirado */
       text-transform: uppercase;
       font-size: 0.7rem;
-      color: #495057;
+      color: var(--brand-color); 
+      white-space: normal;
+  }
+  .summary-table td {
+      text-align: center;
+      color: #555; /* Color base más suave */
   }
   .summary-table td:first-child {
-      text-align: center; /* Centrado como el resto */
       font-weight: 500;
   }
   .summary-table tbody tr:nth-child(even) {
-      background-color: #f8f9fa;
+      background-color: transparent; /* Fondo retirado */
   }
   .summary-table tbody tr:last-child td {
       border-bottom: none;
   }
 
-  /* --- Nuevo Diseño de Etiquetas de Estado (UX) --- */
+  /* --- Resaltado de Filas (según imagen adjunta) --- */
+  .row-highlight {
+      background-color: var(--color-perfect-bg) !important;
+  }
+  .row-highlight td {
+      color: var(--brand-color) !important;
+      font-weight: 600 !important;
+  }
+  .row-highlight td:first-child {
+      border-left: 4px solid var(--brand-color); /* Barra lateral como la imagen */
+  }
+
+  /* --- Diseño de Etiquetas de Estado --- */
   .status-tag {
     display: inline-flex;
     align-items: center;
@@ -144,17 +160,21 @@
   }
   .tag-cumplido {
     color: var(--color-perfect);
-    background-color: var(--color-perfect-bg);
+    background-color: transparent; /* Ya tiene el fondo de la fila */
   }
   .tag-cumplido svg {
     fill: var(--color-perfect);
   }
   .tag-incompleto {
     color: var(--color-pendiente);
-    background-color: var(--color-pendiente-bg);
+    background-color: transparent; 
+    font-weight: 400; 
+    padding-left: 0;
+    padding-right: 0;
   }
   .tag-incompleto svg {
     fill: var(--color-pendiente);
+    opacity: 0.6; 
   }
 
 
@@ -232,21 +252,31 @@
     padding: 0.25rem 0.75rem;
     font-weight: 600;
     font-size: 0.8rem;
-    cursor: pointer;
     width: 85px;
     text-align: center;
   }
-  .status-presente { color: var(--color-perfect); background-color: var(--color-perfect-bg); border: 1px solid var(--color-perfect);}
-  .status-falta { color: var(--color-fail); background-color: var(--color-fail-bg); border: 1px solid var(--color-fail);}
-  .status-pendiente { color: var(--color-pendiente); background-color: var(--color-pendiente-bg); border: 1px solid #ced4da;}
-
+  .status-perfect { 
+    color: var(--color-perfect);
+    background-color: var(--color-perfect-bg);
+    border: 1px solid var(--color-perfect); 
+  }
+  .status-falta { 
+    color: var(--color-fail);
+    background-color: var(--color-fail-bg);
+    border: 1px solid var(--color-fail);
+  }
+  .status-pendiente { 
+    color: var(--color-pendiente);
+    background-color: var(--color-pendiente-bg);
+    border: none; 
+  }
 </style>
 </head>
 <body>
 
 <div class="header">
   <h2>CULTOS DE ORACIÓN</h2>
-  <p>Registro de asistencia - Setiembre 2025</p>
+  <p>Registro de asistencia - Enero 2026</p>
 </div>
 
 <div class="main-container">
@@ -266,28 +296,27 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const year = 2025;
-    const month = 8;
+    const year = 2026;
+    const month = 0; // Enero
     const names = ["JEA", "ART", "YHA", "CRI", "LEO", "KAR", "LUI", "JOS", "ERI", "KAT", "JUA", "HP", "JAI"];
     names.sort();
 
     let attendanceData = {
-        '11': { 'CRI': 'presente', 'JAI': 'presente' },
-        '18': { 'HP': 'presente', 'JAI': 'presente', 'LEO': 'presente', 'YHA': 'presente' },
-        '25': { 'JUA': 'presente', 'HP': 'presente' }
+        '1': {},
+        '8': { 'HP': 'presente', 'CRI': 'presente', 'JUA': 'presente' },
+        '15': { 'CRI': 'presente', 'KAT': 'presente', 'JEA': 'presente' },
+        '22': { 'JAI': 'presente', 'JUA': 'presente' },
+        '29': {}
     };
 
     const summarySection = document.getElementById("summary-section");
     const summaryTableContainer = document.getElementById("summary-table-container");
     const attendanceList = document.getElementById("attendance-list");
 
-    const statusText = { presente: 'Presente', falta: 'Falta', pendiente: 'Incompleto' };
-    const statusCycle = ['pendiente', 'presente', 'falta'];
+    const statusText = { presente: 'Presente', falta: 'Fasta', pendiente: '-' };
 
-    // Iconos SVG para los estados de la tabla de resumen
     const icons = {
         cumplido: `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`,
-        parcial: `<svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`,
         noAsistio: `<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`
     };
 
@@ -346,29 +375,8 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePersonSummary(name);
         });
 
-        document.querySelectorAll('.status-badge').forEach(badge => {
-            badge.addEventListener('click', toggleStatus);
-        });
-
         updateSummarySection();
         renderSummaryTable();
-    }
-    
-    function toggleStatus(event) {
-        const { name, day } = event.currentTarget.dataset;
-        const currentStatus = attendanceData[day][name] || 'pendiente';
-        const currentIndex = statusCycle.indexOf(currentStatus);
-        const nextStatus = statusCycle[(currentIndex + 1) % statusCycle.length];
-        
-        attendanceData[day][name] = nextStatus;
-        
-        const badge = event.currentTarget;
-        badge.className = `status-badge status-${nextStatus.replace('presente', 'perfect')}`;
-        badge.textContent = statusText[nextStatus];
-        
-        updateSummarySection();
-        updatePersonSummary(name);
-        renderSummaryTable(); // Re-render summary table on change
     }
     
     function updatePersonSummary(name) {
@@ -379,10 +387,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        const asistenciaMinima = 2;
-        // El porcentaje ahora refleja la finalización del objetivo mínimo
+        const asistenciaMinima = 1;
         const percentage = asistenciaMinima > 0 ? Math.round((presentCount / asistenciaMinima) * 100) : 0;
-        // Se limita la barra visual al 100% por estética, pero se muestra el porcentaje real
         const progressBarWidth = Math.min(percentage, 100);
 
         const card = attendanceList.querySelector(`.person-card[data-name="${name}"]`);
@@ -435,23 +441,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            const asistenciaMinima = 2;
-            
+            const asistenciaMinima = 1;
             let statusClass, statusIcon, statusLabel;
+            let isCumplido = false;
 
             if (presentCount >= asistenciaMinima) {
                 statusClass = 'tag-cumplido';
                 statusIcon = icons.cumplido;
                 statusLabel = 'Cumplido';
+                isCumplido = true;
             } else {
-                statusClass = 'tag-incompleto'; // Clase gris unificada
-                if (presentCount > 0) {
-                    statusIcon = icons.parcial;
-                    statusLabel = 'Parcial';
-                } else {
-                    statusIcon = icons.noAsistio;
-                    statusLabel = 'No asistió';
-                }
+                statusClass = 'tag-incompleto';
+                statusIcon = icons.noAsistio;
+                statusLabel = 'No asistió';
             }
 
             const statusTagHTML = `
@@ -461,8 +463,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
 
+            // Aplicar clase de resaltado si se cumplió la meta
+            const rowClass = isCumplido ? 'row-highlight' : '';
+
             tableHTML += `
-                <tr>
+                <tr class="${rowClass}">
                     <td>${name}</td>
                     <td>${asistenciaMinima}</td>
                     <td>${presentCount > 0 ? presentCount : ''}</td>
@@ -481,4 +486,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
-
