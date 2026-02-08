@@ -35,24 +35,29 @@
   .main-container {
     padding: 1rem;
   }
+
+  /* --- Header Corregido --- */
   .header {
     background-color: var(--brand-color);
     color: white;
-    padding: 0.5rem;
+    /* Ajustado a 0.5rem según solicitud */
+    padding: 0.5rem; 
     text-align: center;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    margin: -1rem -1rem 0 -1rem;
+    /* Ajustado a 0 según solicitud */
+    margin: 0; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px; 
   }
   .header h2 {
-    margin: 1rem 0 0 0;
+    margin: 0; 
     font-weight: 700;
     letter-spacing: 0.5px;
-  }
-  .header p {
-    margin: 0.25rem 0 0;
-    opacity: 0.95;
-    font-weight: 400;
+    line-height: 1.2;
+    text-transform: uppercase;
   }
   
   /* --- Resumen Superior --- */
@@ -63,7 +68,7 @@
     padding: 1rem 1rem 0.5rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    margin-top: 0rem;
+    margin-top: 1rem; 
     text-align: center;
   }
   .summary-item {
@@ -89,13 +94,6 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.06);
     margin-top: 1rem;
   }
-  .summary-table-title {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
-    color: var(--brand-color);
-    text-align: center;
-    font-weight: 600;
-  }
   .table-wrapper {
       overflow-x: auto;
   }
@@ -104,7 +102,7 @@
       border-collapse: collapse;
   }
   .summary-table th, .summary-table td {
-      padding: 6px 8px; /* Un poco más de aire */
+      padding: 6px 8px;
       text-align: center;
       border-bottom: 1px solid var(--border-color);
       font-size: 0.9rem;
@@ -112,7 +110,7 @@
   }
   .summary-table th {
       font-weight: 600;
-      background-color: transparent; /* Fondo retirado */
+      background-color: transparent;
       text-transform: uppercase;
       font-size: 0.7rem;
       color: var(--brand-color); 
@@ -120,19 +118,19 @@
   }
   .summary-table td {
       text-align: center;
-      color: #555; /* Color base más suave */
+      color: #555;
   }
   .summary-table td:first-child {
       font-weight: 500;
   }
   .summary-table tbody tr:nth-child(even) {
-      background-color: transparent; /* Fondo retirado */
+      background-color: transparent;
   }
   .summary-table tbody tr:last-child td {
       border-bottom: none;
   }
 
-  /* --- Resaltado de Filas (según imagen adjunta) --- */
+  /* --- Resaltado de Filas --- */
   .row-highlight {
       background-color: var(--color-perfect-bg) !important;
   }
@@ -141,7 +139,7 @@
       font-weight: 600 !important;
   }
   .row-highlight td:first-child {
-      border-left: 4px solid var(--brand-color); /* Barra lateral como la imagen */
+      border-left: 4px solid var(--brand-color);
   }
 
   /* --- Diseño de Etiquetas de Estado --- */
@@ -160,7 +158,7 @@
   }
   .tag-cumplido {
     color: var(--color-perfect);
-    background-color: transparent; /* Ya tiene el fondo de la fila */
+    background-color: transparent;
   }
   .tag-cumplido svg {
     fill: var(--color-perfect);
@@ -177,8 +175,7 @@
     opacity: 0.6; 
   }
 
-
-  /* --- Lista de Tarjetas de Asistencia --- */
+  /* --- Lista de Tarjetas --- */
   .attendance-list {
     margin-top: 1.5rem;
     display: grid;
@@ -275,24 +272,14 @@
 <body>
 
 <div class="header">
-  <h2>CULTOS DE ORACIÓN</h2>
-  <p>Registro de asistencia - Enero 2026</p>
+  <h2>CULTO DE ORACIÓN - ENE 2026</h2>
 </div>
 
 <div class="main-container">
-  <div id="summary-section" class="summary-section">
-    <!-- Resumen diario se generará aquí -->
-  </div>
-
-  <div id="summary-table-container">
-    <!-- Tabla de resumen general se generará aquí -->
-  </div>
-
-  <div id="attendance-list" class="attendance-list">
-    <!-- Tarjetas de personas se generarán aquí -->
-  </div>
+  <div id="summary-section" class="summary-section"></div>
+  <div id="summary-table-container"></div>
+  <div id="attendance-list" class="attendance-list"></div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -420,7 +407,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderSummaryTable() {
         let tableHTML = `
             <div class="summary-table-container">
-                <h3 class="summary-table-title">Resumen General</h3>
                 <div class="table-wrapper">
                     <table class="summary-table">
                         <thead>
@@ -463,7 +449,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
 
-            // Aplicar clase de resaltado si se cumplió la meta
             const rowClass = isCumplido ? 'row-highlight' : '';
 
             tableHTML += `
