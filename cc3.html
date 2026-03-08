@@ -68,7 +68,6 @@
         .player-container {
             width: 100%;
             height: 100vh; /* En móvil ocupa todo el alto por defecto */
-            /* En móvil hacemos que parezca que el fondo es gris pero la app blanca */
             background-color: var(--surface);
             display: flex;
             flex-direction: column; 
@@ -86,30 +85,32 @@
         /* --- Panel de Playlist --- */
         .playlist-container {
             width: 100%;
-            padding: 1.5rem; /* Un poco más de espacio */
+            padding: 1.5rem; 
             box-sizing: border-box;
             overflow-y: auto;
-            /* AUMENTADO: Espacio extra para que el último item no quede oculto tras el reproductor más alto */
-            padding-bottom: 200px; 
+            padding-bottom: 200px; /* Espacio extra para el reproductor inferior */
         }
         
-        #playlist-title {
-            margin-top: 0; 
-            color: white; /* Texto blanco sobre el gradiente */
+        .playlist-title {
+            color: white; 
             font-weight: 700;
             font-size: 1.1rem;
-            
-            /* Estilo de tarjeta con gradiente */
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             padding: 1rem;
             border-radius: 1rem;
-            margin-bottom: 1rem; /* CAMBIADO: Reducido de 1.5rem a 1rem */
+            margin-bottom: 1rem;
+            margin-top: 1.5rem; /* Separación de la lista anterior */
             box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
+        /* El primer título no necesita margen superior */
+        .playlist-title:first-child {
+            margin-top: 0;
+        }
 
-        #playlist { list-style: none; padding: 0; margin: 0; }
-        #playlist li {
+        .playlist-list { list-style: none; padding: 0; margin: 0; }
+        .playlist-list li {
             padding: 1rem; 
             border-radius: 0.75rem; 
             margin-bottom: 0.5rem;
@@ -120,16 +121,14 @@
             font-weight: 500;
         }
         
-        /* Quitar borde del último elemento */
-        #playlist li:last-child { border-bottom: none; }
+        .playlist-list li:last-child { border-bottom: none; }
 
-        #playlist li:hover { 
+        .playlist-list li:hover { 
             background-color: #fafafa; 
             transform: translateX(4px);
         }
         
-        /* Estilo activo "Vibrant" */
-        #playlist li.active { 
+        .playlist-list li.active { 
             background-color: var(--accent-soft); 
             color: var(--accent-text); 
             font-weight: 700;
@@ -137,21 +136,19 @@
             box-shadow: 0 2px 8px rgba(255, 152, 0, 0.1);
         }
         
-
         /* --- Barra de Reproductor Fija --- */
         .player-controls {
-            background-color: rgba(255, 255, 255, 0.95); /* Blanco translúcido */
+            background-color: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(10px);
             padding: 1rem 1.5rem; 
-            /* AUMENTADO CRÍTICAMENTE: 3.5rem extra para levantar los botones sobre la barra de Android */
             padding-bottom: calc(3.5rem + var(--safe-area-bottom)); 
             border-top: 1px solid var(--border-color);
             z-index: 100; flex-shrink: 0;
-            position: absolute; /* Absolute relative to container */
+            position: absolute; 
             bottom: 0;
             left: 0;
             right: 0;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05); /* Sombra suave hacia arriba */
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05); 
         }
         
         #now-playing {
@@ -163,7 +160,7 @@
         
         .progress-container {
             width: 100%; height: 0.35rem; 
-            background-color: #eeeeee; /* Gris muy claro */
+            background-color: #eeeeee; 
             border-radius: 1rem; cursor: pointer; margin-bottom: 0.5rem;
         }
         #progress-bar {
@@ -188,7 +185,6 @@
         .buttons-container button:active { transform: scale(0.9); }
         .buttons-container button i { font-size: 1.8rem; color: #555; }
         
-        /* Botón de Play destacado */
         #play-pause-btn {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             border-radius: 50%;
@@ -202,9 +198,8 @@
         #play-pause-btn i { 
             font-size: 1.8rem; 
             color: white; 
-            margin-left: 2px; /* Ajuste óptico para el icono de play */
+            margin-left: 2px; 
         }
-        /* Ajuste óptico cuando es pausa */
         #play-pause-btn i.ph-pause-circle, 
         #play-pause-btn i.ph-pause { 
             margin-left: 0; 
@@ -215,18 +210,18 @@
         ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 0.5rem; }
 
         /* --- Diseño Responsivo y Escritorio --- */
-        @media screen and (min-width: 48rem) { /* 768px */
+        @media screen and (min-width: 48rem) { 
             .player-container {
                 width: 90%; 
-                max-width: 420px; /* Ancho típico de móvil para mantener el diseño de tarjeta */
+                max-width: 420px; 
                 height: 85vh; 
                 max-height: 800px;
-                border-radius: 24px; /* Bordes muy redondeados */
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); /* Sombra elegante */
-                border: 1px solid white; /* Borde sutil */
+                border-radius: 24px; 
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); 
+                border: 1px solid white; 
             }
             .player-controls { 
-                border-radius: 0 0 24px 24px; /* Redondear abajo */
+                border-radius: 0 0 24px 24px; 
                 padding-bottom: 1.5rem; 
             }
         }
@@ -236,9 +231,8 @@
     
     <div class="player-container">
         <div class="main-view">
-            <div class="playlist-container">
-                 <div id="playlist-title">Lista de Reproducción v0309</div>
-                 <ul id="playlist"></ul>
+            <!-- El contenedor se llenará dinámicamente con JavaScript -->
+            <div class="playlist-container" id="main-playlist-container">
             </div>
         </div>
         <div class="player-controls">
@@ -267,51 +261,67 @@
             document.documentElement.style.setProperty('--vh', `${vh}px`);
         };
         window.addEventListener('resize', setVh);
-        setVh(); // Set initial value
+        setVh(); 
 
-        // --- 1. GESTIÓN DE DATOS ---
-        const playlistData = [
+        // --- 1. GESTIÓN DE DATOS MULTI-LISTA ---
+        const playlistsData = [
             {
-                title: "Al que me ciñe - JAR",
-                src: "https://files.catbox.moe/2dkdlv.mp3",
-                toneSequence: "Bb",
-                toneRehearsed: "Bb"
+                title: "Lista de Reproducción v0310",
+                tracks: [
+                    {
+                        title: "tedarelomejor_jar",
+                        src: "https://files.catbox.moe/ym19f8.mp3",
+                        toneSequence: "E",
+                        toneRehearsed: "E"
+                    },
+                    {
+                        title: "Serallenalatierra_Marcos_1992 (Ofrenda)",
+                        src: "https://files.catbox.moe/pc8yd5.mp3",
+                        toneSequence: "Am",
+                        toneRehearsed: "Am"
+                    },
+                    {
+                        title: "contodamialma_comandogaf",
+                        src: "https://files.catbox.moe/gw830q.mp3",
+                        toneSequence: "-",
+                        toneRehearsed: "-"
+                    },
+                    {
+                        title: "desdemiinterior_hillsong",
+                        src: "https://files.catbox.moe/7at25k.mp3",
+                        toneSequence: "F",
+                        toneRehearsed: "F"
+                    },
+                    {
+                        title: "miroca_hillsong (Llamado)",
+                        src: "https://files.catbox.moe/jfbese.mp3",
+                        toneSequence: "C",
+                        toneRehearsed: "C"
+                    }
+                ]
             },
-			{
-                title: "Tu pueblo dice gracias - Jacobo Ramos (Ofrenda)",
-                src: "https://files.catbox.moe/khwh1f.mp3",
-                toneSequence: "G",
-                toneRehearsed: "G"
-            },
-			{
-                title: "Gracia Sublime es - Emir Sensini 2015",
-                src: "https://files.catbox.moe/at3lg4.mp3",
-                toneSequence: "A",
-                toneRehearsed: "A"
-            },
-			{
-                title: "Que seria de mi (en vivo 1998)- JAR",
-                src: "https://files.catbox.moe/6bavu3.mp3",
-                toneSequence: "G",
-                toneRehearsed: "G"
-            },
-			{
-                title: "Este es mi deseo - Claudio Freidzon",
-                src: "https://files.catbox.moe/7tmz3n.mp3",
-                toneSequence: "G",
-                toneRehearsed: "G"
-            },
-			{
-                title: "Open Heaven - Hillsong 2015 (NEW)",
-                src: "https://files.catbox.moe/ljftot.mp3",
-                toneSequence: "C",
-                toneRehearsed: ""
+            {
+                title: "Secuencia sin Guitarra v0310",
+                tracks: [
+                    {
+                        title: "tedarelomejor_jar (Pista Práctica)",
+                        src: "https://files.catbox.moe/y6vj5o.mp3",
+                        toneSequence: "E",
+                        toneRehearsed: "E"
+                    },
+                    {
+                        title: "Serallenalatierra_Marcos_1992 (Pista Práctica)",
+                        src: "https://files.catbox.moe/y6vj5o.mp3",
+                        toneSequence: "Am",
+                        toneRehearsed: "Am"
+                    }
+                ]
             }
         ];
 
         // --- 2. REFERENCIAS A ELEMENTOS DEL DOM ---
         const audioPlayer = document.getElementById('audio-player');
-        const playlistEl = document.getElementById('playlist');
+        const containerEl = document.getElementById('main-playlist-container');
         const nowPlayingEl = document.getElementById('now-playing');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const prevBtn = document.getElementById('prev-btn');
@@ -321,13 +331,15 @@
         const currentTimeEl = document.getElementById('current-time');
         const totalDurationEl = document.getElementById('total-duration');
 
-        let currentTrackIndex = 0;
+        let currentPlaylistIndex = -1;
+        let currentTrackIndex = -1;
         let isPlaying = false;
 
         // --- 3. FUNCIONES PRINCIPALES ---
         
-        function loadTrack(trackIndex) {
-            if (trackIndex < 0 || trackIndex >= playlistData.length) {
+        function loadTrack(playlistIndex, trackIndex) {
+            // Estado vacío inicial
+            if (playlistIndex < 0 || trackIndex < 0) {
                 nowPlayingEl.textContent = "Selecciona una canción";
                 currentTimeEl.textContent = "0:00";
                 totalDurationEl.textContent = "0:00";
@@ -335,33 +347,28 @@
                 return;
             }
 
+            currentPlaylistIndex = playlistIndex;
             currentTrackIndex = trackIndex;
-            const track = playlistData[trackIndex];
-            audioPlayer.src = track.src; 
+            const track = playlistsData[playlistIndex].tracks[trackIndex];
             
-            // --- ACTUALIZACIÓN DE TEXTO ---
+            audioPlayer.src = track.src; 
             nowPlayingEl.textContent = `Tono-Secuencia: ${track.toneSequence} | Tono-Ensayado: ${track.toneRehearsed}`; 
             
             updatePlaylistUI();
         }
 
         function playTrack() {
-            if (!audioPlayer.src || audioPlayer.src === window.location.href) {
-                return;
-            }
+            if (!audioPlayer.src || audioPlayer.src === window.location.href) return;
             
             const playPromise = audioPlayer.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
                     isPlaying = true;
-                    // Cambio de icono Play/Pause
                     playPauseBtn.innerHTML = '<i class="ph-fill ph-pause"></i>';
                 }).catch(error => {
-                    if (error.name !== 'AbortError') {
-                        console.error("Audio playback error:", error);
-                        isPlaying = false;
-                        playPauseBtn.innerHTML = '<i class="ph-fill ph-play"></i>';
-                    }
+                    console.error("Audio playback error:", error);
+                    isPlaying = false;
+                    playPauseBtn.innerHTML = '<i class="ph-fill ph-play"></i>';
                 });
             }
         }
@@ -373,21 +380,23 @@
         }
 
         function playPauseTrack() { 
-            if (!audioPlayer.src || audioPlayer.src === window.location.href) {
-                return;
-            }
+            if (!audioPlayer.src || audioPlayer.src === window.location.href) return;
             isPlaying ? pauseTrack() : playTrack(); 
         }
         
         function nextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % playlistData.length;
-            loadTrack(currentTrackIndex);
+            if (currentPlaylistIndex === -1) return;
+            const currentList = playlistsData[currentPlaylistIndex].tracks;
+            const nextIdx = (currentTrackIndex + 1) % currentList.length;
+            loadTrack(currentPlaylistIndex, nextIdx);
             playTrack();
         }
         
         function prevTrack() {
-            currentTrackIndex = (currentTrackIndex - 1 + playlistData.length) % playlistData.length;
-            loadTrack(currentTrackIndex);
+            if (currentPlaylistIndex === -1) return;
+            const currentList = playlistsData[currentPlaylistIndex].tracks;
+            const prevIdx = (currentTrackIndex - 1 + currentList.length) % currentList.length;
+            loadTrack(currentPlaylistIndex, prevIdx);
             playTrack();
         }
         
@@ -416,26 +425,43 @@
         }
 
         function updatePlaylistUI() {
-             Array.from(playlistEl.children).forEach((item, index) => {
-                if (index === currentTrackIndex) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
+             const allLists = document.querySelectorAll('.playlist-list');
+             allLists.forEach((ul, pIndex) => {
+                 Array.from(ul.children).forEach((li, tIndex) => {
+                     if (pIndex === currentPlaylistIndex && tIndex === currentTrackIndex) {
+                         li.classList.add('active');
+                     } else {
+                         li.classList.remove('active');
+                     }
+                 });
+             });
         }
         
-        function populatePlaylist() {
-            playlistEl.innerHTML = '';
-            playlistData.forEach((track, index) => {
-                const li = document.createElement('li');
-                // Numeración automática
-                li.textContent = `${index + 1}. ${track.title}`; 
-                li.addEventListener('click', () => {
-                    loadTrack(index);
-                    playTrack();
+        function populatePlaylists() {
+            containerEl.innerHTML = ''; 
+            
+            playlistsData.forEach((playlist, pIndex) => {
+                // Crear Título de la lista
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'playlist-title';
+                titleDiv.textContent = playlist.title;
+                containerEl.appendChild(titleDiv);
+
+                // Crear contenedor UL
+                const ul = document.createElement('ul');
+                ul.className = 'playlist-list';
+                
+                playlist.tracks.forEach((track, tIndex) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${tIndex + 1}. ${track.title}`; 
+                    li.addEventListener('click', () => {
+                        loadTrack(pIndex, tIndex);
+                        playTrack();
+                    });
+                    ul.appendChild(li);
                 });
-                playlistEl.appendChild(li);
+                
+                containerEl.appendChild(ul);
             });
         }
         
@@ -452,8 +478,8 @@
              totalDurationEl.textContent = formatTime(audioPlayer.duration);
         });
         
-        populatePlaylist();
-        loadTrack(-1); 
+        populatePlaylists();
+        loadTrack(-1, -1); 
 
     </script>
 </body>
